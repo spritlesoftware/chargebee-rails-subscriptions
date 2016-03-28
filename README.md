@@ -35,16 +35,16 @@ Migrate the changes
 Setup a Plan locally from your chargebee account
 
 ```ruby
-    Plan.create(name: "CB Demo Hustle", plan_id: "cbdemo_hustle", price: 49, period: 1, period_unit: "month", status: "active")
+Plan.create(name: "CB Demo Hustle", plan_id: "cbdemo_hustle", price: 49, period: 1, period_unit: "month", status: "active")
 ```
 Configure the app for setting a default plan for you application
 
 ```ruby
     # config/initializers/chargebee_rails.rb
     
-    ChargebeeRails.configure do |config|
-        config.default_plan_id = '<your_plan_in_chargebee>'
-    end
+ChargebeeRails.configure do |config|
+    config.default_plan_id = '<your_plan_in_chargebee>'
+end
 ```
 ## Development
 
