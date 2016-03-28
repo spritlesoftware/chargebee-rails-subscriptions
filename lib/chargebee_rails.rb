@@ -1,5 +1,6 @@
 require "chargebee_rails/version"
 require "chargebee_rails/configuration"
+require "chargebee_rails/errors"
 require "generators/chargebee_rails/install_generator"
 require "chargebee_rails/chargeable_subscription"
 require "chargebee_rails/subscription_builder"

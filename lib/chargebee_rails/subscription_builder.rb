@@ -4,8 +4,10 @@ module ChargebeeRails
       @customer = customer
       @options = options
       @options[:plan_id] ||= ChargebeeRails.configuration.default_plan_id
+      raise PlanError.new("Default plan not configured") unless @options[:plan_id]
       @options[:trial_end] = 0 if @options[:skip_trial]
       @plan = Plan.find_by(plan_id: @options[:plan_id])
+      raise PlanError.new("Plan not found locally") unless @plan
     end
 
     def create
