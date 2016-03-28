@@ -1,11 +1,12 @@
 require "chargebee_rails/version"
+require "chargebee_rails/configuration"
 require "generators/chargebee_rails/install_generator"
 require "chargebee_rails/chargeable_subscription"
 require "chargebee_rails/subscription_builder"
 
 module ChargebeeRails
-  def subscribe(plan, options={})
-    SubscriptionBuilder.new(self, plan, options).create
+  def subscribe(options={})
+    SubscriptionBuilder.new(self, options).create
   end
 
   def create_subscription_from_hosted_page(hosted_page)
@@ -24,5 +25,28 @@ module ChargebeeRails
       status: hosted_card.status
     )
     subscription
+  end
+
+  def update_owner_details(options={})
+    result = ChargeBee::Customer.update(chargebee_id, options)
+    customer = result.customer
+    update(
+      first_name: customer.first_name,
+      last_name: customer.last_name,
+      email: customer.email,
+      phone: customer.phone
+    )
+  end
+
+  def update_billing_details(options={})
+    ChargeBee::Customer.update_billing_info(chargebee_id, options).customer
+  end
+
+  def add_contacts(options={})
+    ChargeBee::Customer.add_contact(chargebee_id, options).customer
+  end
+
+  def update_contacts(options={})
+    ChargeBee::Customer.update_contact(chargebee_id, options).customer
   end
 end

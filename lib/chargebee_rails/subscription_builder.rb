@@ -1,9 +1,11 @@
 module ChargebeeRails
   class SubscriptionBuilder
-    def initialize(customer, plan, options)
+    def initialize(customer, options)
       @customer = customer
-      @plan = plan
       @options = options
+      @options[:plan_id] ||= ChargebeeRails.configuration.default_plan_id
+      @options[:trial_end] = 0 if @options[:skip_trial]
+      @plan = Plan.find_by(plan_id: @options[:plan_id])
     end
 
     def create
@@ -17,7 +19,7 @@ module ChargebeeRails
     private
 
     def create_cb_subscription
-      ChargeBee::Subscription.create(subscription_payload)
+      ChargeBee::Subscription.create(@options)
     end
 
     def create_local_subscription
