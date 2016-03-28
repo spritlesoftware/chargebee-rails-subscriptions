@@ -16,7 +16,7 @@ module ChargebeeRails
     attr_accessor :default_plan_id
 
     def initialize
-      @default_plan_id = 'default-plan'
+      @default_plan_id = nil
     end
   end
 end

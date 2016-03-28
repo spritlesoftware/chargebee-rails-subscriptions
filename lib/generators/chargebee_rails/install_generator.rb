@@ -23,7 +23,7 @@ module ChargebeeRails
       # end
 
       # require "securerandom"
-      # template "config/initializers/chargebee.rb"
+      template "config/initializers/chargebee_rails.rb"
 
       # Generate subscription.
       generate("model", "subscription chargebee_id:string chargebee_plan:string status:string plan_id:integer #{subscription_owner_model}_id:integer")
