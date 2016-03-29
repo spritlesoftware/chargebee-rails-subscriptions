@@ -46,6 +46,16 @@ ChargebeeRails.configure do |config|
     config.default_plan_id = '<your_plan_in_chargebee>'
 end
 ```
+
+Add this line to your subscription owner model
+
+```ruby
+# app/models/<subscription_owner>.rb
+ ...
+ include ChargebeeRails::Subscriber
+ ...
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
