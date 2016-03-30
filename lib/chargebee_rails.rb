@@ -4,34 +4,13 @@ require "chargebee_rails/errors"
 require "generators/chargebee_rails/install_generator"
 require "chargebee_rails/chargeable_subscription"
 require "chargebee_rails/subscription_builder"
+require "chargebee_rails/subscriber"
 
 module ChargebeeRails
-  def subscribe(options={})
-    SubscriptionBuilder.new(self, options).create
-  end
-
-  def create_subscription_from_hosted_page(hosted_page)
-    hosted_subscription = hosted_page.content.subscription
-    hosted_card = hosted_page.content.card
-    subscription = self.create_subscription(
-      chargebee_id: hosted_subscription.id,
-      chargebee_plan: hosted_subscription.plan_id,
-      status: hosted_subscription.status,
-      plan: Plan.find_by(plan_id: hosted_subscription.plan_id)
-    )
-    subscription.create_card(
-      cb_customer_id: hosted_card.customer_id,
-      last4: hosted_card.last4,
-      card_type: hosted_card.card_type,
-      status: hosted_card.status
-    )
-    subscription
-  end
-
-  def update_owner_details(options={})
-    result = ChargeBee::Customer.update(chargebee_id, options)
+  def self.update_subscriber(subscriber, options={})
+    result = ChargeBee::Customer.update(subscriber.chargebee_id, options)
     customer = result.customer
-    update(
+    subscriber.update(
       first_name: customer.first_name,
       last_name: customer.last_name,
       email: customer.email,
@@ -39,15 +18,19 @@ module ChargebeeRails
     )
   end
 
-  def update_billing_details(options={})
-    ChargeBee::Customer.update_billing_info(chargebee_id, options).customer
+  def self.update_billing_addr(subscriber, options={})
+    ChargeBee::Customer.update_billing_info(subscriber.chargebee_id, options).customer
   end
 
-  def add_contacts(options={})
-    ChargeBee::Customer.add_contact(chargebee_id, options).customer
+  def self.add_subscriber_contacts(subscriber, options={})
+    ChargeBee::Customer.add_contact(subscriber.chargebee_id, options).customer
   end
 
-  def update_contacts(options={})
-    ChargeBee::Customer.update_contact(chargebee_id, options).customer
+  def self.update_subscriber_contacts(subscriber, options={})
+    ChargeBee::Customer.update_contact(subscriber.chargebee_id, options).customer
+  end
+
+  def self.retrieve_subscriber(subscriber)
+    ChargeBee::Customer.retrieve(subscriber.chargebee_id).customer
   end
 end

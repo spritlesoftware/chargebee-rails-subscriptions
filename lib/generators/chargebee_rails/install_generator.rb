@@ -4,7 +4,7 @@ module ChargebeeRails
 
     include Rails::Generators::Migration
 
-    argument :subscription_owner_model, :type => :string, :required => true, :desc => "Owner of the subscription"
+    argument :subscriber_model, :type => :string, :required => true, :desc => "Owner of the subscription"
     desc "ChargebeeRails installation generator"
 
     def self.source_paths
@@ -12,9 +12,9 @@ module ChargebeeRails
     end
 
 
-    # Override subscription_owner_model to ensure it is always returned lowercase.
-    def subscription_owner_model
-      @subscription_owner_model.downcase
+    # Override subscriber_model to ensure it is always returned lowercase.
+    def subscriber_model
+      @subscriber_model.downcase
     end
 
     def install
@@ -26,7 +26,7 @@ module ChargebeeRails
       template "config/initializers/chargebee_rails.rb"
 
       # Generate subscription.
-      generate("model", "subscription chargebee_id:string chargebee_plan:string status:string plan_id:integer #{subscription_owner_model}_id:integer")
+      generate("model", "subscription chargebee_id:string chargebee_plan:string status:string plan_id:integer #{subscriber_model}_id:integer")
       template "app/models/subscription.rb"
 
       # Generate plan.
@@ -38,9 +38,9 @@ module ChargebeeRails
       template "app/models/card.rb"
 
       # Update the owner relationship and add related_fields.
-      generate("migration add_chargebee_id_to_#{subscription_owner_model} chargebee_id:string")
-      inject_into_class "app/models/#{subscription_owner_model}.rb", subscription_owner_model.camelize.constantize,
-                        "# Added by ChargebeeRails.\n  has_one :subscription\n\n include ChargebeeRails\n\n"
+      generate("migration add_chargebee_id_to_#{subscriber_model} chargebee_id:string")
+      inject_into_class "app/models/#{subscriber_model}.rb", subscriber_model.camelize.constantize,
+                        "# Added by ChargebeeRails.\n  has_one :subscription\n\n include ChargebeeRails::Subscriber\n\n"
     end
   end
 end
