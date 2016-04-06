@@ -9,5 +9,13 @@ module ChargebeeRails
     end
   end
 
-  class PlanError < Error; end
+  class PlanError < Error
+    def plan_not_found
+      "Plan Not Found"
+    end
+
+    def plan_not_configured
+      "Plan Not Configured"
+    end
+  end
 end
