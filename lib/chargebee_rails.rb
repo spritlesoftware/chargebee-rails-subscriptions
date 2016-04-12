@@ -1,4 +1,8 @@
 require "chargebee_rails/version"
+require "chargebee"
+require "rails"
+require "chargebee_rails/engine"
+require "chargebee_rails/event_handler"
 require "chargebee_rails/configuration"
 require "chargebee_rails/errors"
 require "generators/chargebee_rails/install_generator"

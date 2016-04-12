@@ -18,4 +18,6 @@ module ChargebeeRails
       "Plan Not Configured"
     end
   end
+
+  class UnauthorizedError < Error; end
 end
