@@ -26,9 +26,9 @@ module ChargebeeRails
       ChargeBee::Customer.retrieve(chargebee_id).customer
     end
 
-    def list_invoices(limit=1, status="paid")
+    def list_invoices(status="paid", limit="", offset="")
       list = ChargeBee::Invoice.invoices_for_customer(chargebee_id, {
-        :limit => limit
+        :limit => limit, :offset => offset
       }).select { |a| a.invoice.status == status }
     end
 
