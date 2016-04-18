@@ -11,7 +11,7 @@ module ChargebeeRails
       ChargeBee::Subscription.retrieve(chargebee_id).subscription
     end
 
-
+    # Update plan for a subscription
     def change_plan(plan, end_of_term=nil, proration=nil)
       end_of_term ||= ChargebeeRails.configuration.end_of_term
       proration ||= ChargebeeRails.configuration.proration
@@ -25,6 +25,7 @@ module ChargebeeRails
       )
     end
 
+    # Update plan quantity for subscription
     def set_plan_quantity(quantity)
       subscription = ChargeBee::Subscription.update(
         chargebee_id, {plan_quantity: quantity}
@@ -44,7 +45,7 @@ module ChargebeeRails
       subscription = ChargeBee::Subscription.cancel(chargebee_id, options).subscription
       update(
         status: subscription.status
-      ) # unless end_of_term
+      )
     end
 
     # Stop a scheduled cancellation of a subscription
@@ -61,7 +62,7 @@ module ChargebeeRails
     end
 
     # Estimates the subscription's renewal  
-    def renewal_estimate(options={})
+    def estimate_renewal(options={})
       options[:include_delayed_charges] ||= ChargebeeRails.configuration.include_delayed_charges[:renewal_estimate]
       ChargeBee::Estimate.renewal_estimate(chargebee_id, options).estimate
     end

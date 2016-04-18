@@ -22,6 +22,7 @@ module ChargebeeRails
     attr_accessor :include_delayed_charges
     attr_accessor :chargebee_site
     attr_accessor :chargebee_api_key
+    attr_accessor :webhook_api_path
     attr_accessor :secure_webhook_api
     attr_accessor :webhook_authentication
 
@@ -29,6 +30,7 @@ module ChargebeeRails
       @default_plan_id = nil
       @end_of_term = false
       @include_delayed_charges = {changes_estimate: false, renewal_estimate: true}
+      @webhook_api_path = 'chargebee_rails_event'
       @secure_webhook_api = false
       @webhook_authentication = {user: nil, secret: nil}
       @chargebee_site = nil

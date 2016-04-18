@@ -1,9 +1,12 @@
 module ChargebeeRails
   module Subscriber
+
+    # Subscribe customer to a new subscription
     def subscribe(options={})
       SubscriptionBuilder.new(self, options).create
     end
 
+    # Subscribe customer to a new subscription via hosted page
     def subscribe_via_hosted_page(hosted_page)
       hosted_subscription = hosted_page.content.subscription
       hosted_card = hosted_page.content.card
@@ -22,10 +25,12 @@ module ChargebeeRails
       subscription
     end
 
-    def as_subscriber
+    # Retrieve subscriber as chargebee customer
+    def as_chargebee_customer
       ChargeBee::Customer.retrieve(chargebee_id).customer
     end
 
+    # List all invoices for the customer
     def invoices
       ChargeBee::Invoice.invoices_for_customer(chargebee_id).map(&:invoice)
     end
