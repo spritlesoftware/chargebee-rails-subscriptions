@@ -10,10 +10,12 @@ module ChargebeeRails
   end
 
   class PlanError < Error
+    # Raise this error when the plan is not present in active_record
     def plan_not_found
       "Plan Not Found"
     end
 
+    # Raise this error when the plan is not setup in ChargeBee
     def plan_not_configured
       "Plan Not Configured"
     end
