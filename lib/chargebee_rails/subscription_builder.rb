@@ -59,6 +59,7 @@ module ChargebeeRails
     # plan is not set in the ChargebeeRails configuration. 
     # Raise plan not found if the plan passed is not found in active record
     def build_subscription_payload
+      @options[:trial_end] = 0 if @options[:skip_trial]
       @options[:plan_id] ||= ChargebeeRails.configuration.default_plan_id
       raise PlanError.new.plan_not_configureed unless @options[:plan_id]
       @plan = Plan.find_by(plan_id: @options[:plan_id])

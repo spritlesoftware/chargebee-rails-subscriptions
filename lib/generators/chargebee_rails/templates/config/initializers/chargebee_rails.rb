@@ -7,6 +7,10 @@ ChargebeeRails.configure do |config|
   config.chargebee_site = 'CHARGEBEE_SITE'
   config.chargebee_api_key = 'CHARGEBEE_API_KEY'
 
+  # Webhook related configurations
+  # Set the controller name that is used to override the webhook events
+  # config.webhook_handler = 'webhook_overriding_controller_name' 
+
   # Configure your own webhook path for ChargeBee events
   # the default_path is 'chargebee_rails_event'
   # config.webhook_api_path = 'chargebee_rails_event' 
