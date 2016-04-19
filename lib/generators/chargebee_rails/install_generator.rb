@@ -26,7 +26,7 @@ module ChargebeeRails
       template "config/initializers/chargebee_rails.rb"
 
       # Generate subscription.
-      generate("model", "subscription chargebee_id:string chargebee_plan:string status:string plan_id:integer #{subscriber_model}_id:integer")
+      generate("model", "subscription chargebee_id:string chargebee_plan:string status:string has_scheduled_changes:boolean plan_id:integer #{subscriber_model}_id:integer")
       template "app/models/subscription.rb"
 
       # Generate plan.

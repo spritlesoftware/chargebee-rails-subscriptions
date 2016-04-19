@@ -1,5 +1,5 @@
 module ChargebeeRails
-  module ChargeableSubscription
+  module Subscription
 
     def self.included(base)
       base.extend(ClassMethods)
@@ -21,7 +21,8 @@ module ChargebeeRails
       update(
         chargebee_plan: subscription.plan_id,
         plan_id: plan.id,
-        status: subscription.status
+        status: subscription.status,
+        has_scheduled_changes: subscription.has_scheduled_changes
       )
     end
 

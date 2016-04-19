@@ -6,7 +6,7 @@ require "chargebee_rails/event_handler"
 require "chargebee_rails/configuration"
 require "chargebee_rails/errors"
 require "generators/chargebee_rails/install_generator"
-require "chargebee_rails/chargeable_subscription"
+require "chargebee_rails/subscription"
 require "chargebee_rails/subscription_builder"
 require "chargebee_rails/subscriber"
 

@@ -19,6 +19,7 @@ module ChargebeeRails
   class Configuration
     attr_accessor :default_plan_id
     attr_accessor :end_of_term
+    attr_accessor :proration
     attr_accessor :include_delayed_charges
     attr_accessor :chargebee_site
     attr_accessor :chargebee_api_key
@@ -30,6 +31,7 @@ module ChargebeeRails
     def initialize
       @default_plan_id = nil
       @end_of_term = false
+      @proration = true
       @include_delayed_charges = {changes_estimate: false, renewal_estimate: true}
       @webhook_handler = 'chargebee_rails/webhooks'
       @webhook_api_path = 'chargebee_rails_event'
