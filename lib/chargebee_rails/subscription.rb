@@ -18,24 +18,15 @@ module ChargebeeRails
       subscription = ChargeBee::Subscription.update(
         chargebee_id, {plan_id: plan.plan_id, end_of_term: end_of_term, prorate: proration}
       ).subscription
-      update(
-        chargebee_plan: subscription.plan_id,
-        plan_id: plan.id,
-        status: subscription.status,
-        has_scheduled_changes: subscription.has_scheduled_changes
-      )
+      update(subscription_attributes(subscription, plan))
     end
 
     # Update plan quantity for subscription
-    def set_plan_quantity(quantity)
+    def set_plan_quantity(quantity, end_of_term=false)
       subscription = ChargeBee::Subscription.update(
-        chargebee_id, {plan_quantity: quantity}
+        chargebee_id, { plan_quantity: quantity, end_of_term: end_of_term }
       ).subscription
-      update(
-        chargebee_plan: subscription.plan_id,
-        plan_id: plan.id,
-        status: subscription.status
-      )
+      update(subscription_attributes(subscription, plan))
     end
 
     # Cancel a subscription - it will be scheduled for cancellation at term end
@@ -82,6 +73,13 @@ module ChargebeeRails
         ::ChargeBee::Estimate.update_subscription(estimation_params).estimate
       end
 
+    end
+
+    private
+
+    def subscription_attributes(subscription, plan)
+      params = { chargebee_plan: subscription.plan_id, plan_id: plan.id, status: subscription.status,
+        has_scheduled_changes: subscription.has_scheduled_changes }
     end
 
   end
