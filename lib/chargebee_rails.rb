@@ -8,6 +8,7 @@ require "chargebee_rails/errors"
 require "generators/chargebee_rails/install_generator"
 require "chargebee_rails/subscription"
 require "chargebee_rails/subscription_builder"
+require "chargebee_rails/hosted_page_subscription_manager"
 require "chargebee_rails/subscriber"
 
 module ChargebeeRails
