@@ -12,11 +12,10 @@ module ChargebeeRails
     end
 
     # Update plan for a subscription
-    def change_plan(plan, end_of_term=nil, proration=nil)
+    def change_plan(plan, end_of_term=nil)
       end_of_term ||= ChargebeeRails.configuration.end_of_term
-      proration ||= ChargebeeRails.configuration.proration
       subscription = ChargeBee::Subscription.update(
-        chargebee_id, {plan_id: plan.plan_id, end_of_term: end_of_term, prorate: proration}
+        chargebee_id, { plan_id: plan.plan_id, end_of_term: end_of_term }
       ).subscription
       update(subscription_attributes(subscription, plan))
     end
@@ -35,22 +34,19 @@ module ChargebeeRails
     def cancel(options={})
       options[:end_of_term] ||= ChargebeeRails.configuration.end_of_term
       subscription = ChargeBee::Subscription.cancel(chargebee_id, options).subscription
-      update(
-        status: subscription.status
-      )
+      update(status: subscription.status)
     end
 
     # Stop a scheduled cancellation of a subscription
     def stop_cancellation
-      ChargeBee::Subscription.remove_scheduled_cancellation(chargebee_id).subscription
+      subscription = ChargeBee::Subscription.remove_scheduled_cancellation(chargebee_id).subscription
+      update(status: subscription.status)
     end
 
     # Reactivate a cancelled subscription
     def reactivate
       subscription = ChargeBee::Subscription.reactivate(chargebee_id).subscription
-      update(
-        status: subscription.status
-      )
+      update(status: subscription.status)
     end
 
     # Estimates the subscription's renewal  
@@ -78,8 +74,12 @@ module ChargebeeRails
     private
 
     def subscription_attributes(subscription, plan)
-      params = { chargebee_plan: subscription.plan_id, plan_id: plan.id, status: subscription.status,
-        has_scheduled_changes: subscription.has_scheduled_changes }
+      { 
+        chargebee_plan: subscription.plan_id, 
+        plan_id: plan.id, 
+        status: subscription.status,
+        has_scheduled_changes: subscription.has_scheduled_changes
+      }
     end
 
   end

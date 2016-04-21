@@ -8,19 +8,17 @@ module ChargebeeRails
 
     # Here we will create a subscription in Chargebee,
     # update the resulting subscription details for the customer in the 
-    # active record database and finally return the 
-    # active record subscription
+    # application database and finally return the subscription
     def create
       build_subscription_payload
-      create_chargebee_subscription
-      update_customer_chargebee_id
-      create_active_record_subscription
+      create_subscriptions
       update_card
       @subscription
     end
 
+    # Here we will create a subscription in Chargebee,
+    # the resulting subscription details are then updated in application database
     def update
-      build_subscription_payload
       update_subscriptions
       update_card
       @subscription
@@ -29,25 +27,18 @@ module ChargebeeRails
     private
 
     # Create a subscription in Chargebee with the passed options payload
-    def create_chargebee_subscription
+    def create_subscriptions
       @result = ChargeBee::Subscription.create(@options)
+      @customer.update(chargebee_id: @result.customer.id) # Update the chargebee customer id for the subscription owner
+      @subscription = @customer.create_subscription(subscription_attrs) # Create an active record subscription of the chargebee subscription object for the customer
     end
 
-    # Update subscription in ChargeBee and active_record model
+    # Update subscription in ChargeBee and the application model
     def update_subscriptions
-      @result = ChargeBee::Subscription.update(@options)
-      @subscription = @customer.subscription.update(subscription_attrs)
-    end
-
-    # Update the chargebee customer id for the subscription owner
-    def update_customer_chargebee_id
-      @customer.update(chargebee_id: @result.customer.id)
-    end
-
-    # Create an active record subscription of the chargebee subscription object 
-    # for the customer
-    def create_active_record_subscription
-      @subscription = @customer.create_subscription(subscription_attrs)
+      @subscription = @customer.subscription
+      @result = ChargeBee::Subscription.update(@subscription.chargebee_id, @options)
+      @plan = Plan.find_by(plan_id: @result.subscription.plan_id)
+      @subscription.update(subscription_attrs)
     end
 
     # Update the card details of the user if one is passed during subscription

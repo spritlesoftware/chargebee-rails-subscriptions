@@ -44,7 +44,16 @@ module ChargebeeRails
 
     def subscription_cancellation_reminder; end
 
-    def subscription_cancelled; end
+    def subscription_cancelled
+      subscription_event = event.content.subscription
+      subscription = ::Subscription.find_by(chargebee_id: subscription_event.id)
+      subscription.update(
+        chargebee_plan: subscription_event.plan_id,
+        plan: ::Plan.find_by(plan_id: subscription_event.plan_id),
+        status: subscription_event.status,
+        has_scheduled_changes: subscription_event.has_scheduled_changes
+      ) if subscription.has_scheduled_changes
+    end
 
     def subscription_reactivated; end
 
