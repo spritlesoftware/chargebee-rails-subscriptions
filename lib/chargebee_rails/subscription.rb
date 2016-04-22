@@ -28,6 +28,13 @@ module ChargebeeRails
       update(subscription_attributes(subscription, plan))
     end
 
+    # Add or remove addons for the subscription
+    def manage_addons(addon_id, quantity=1)
+      subscription = ChargeBee::Subscription.update(
+        chargebee_id, { addons: [{ id: addon_id, quantity: quantity }] }
+      ).subscription
+    end
+
     # Cancel a subscription - it will be scheduled for cancellation at term end
     # when end_of_term is passed as true. If no options are passed the 
     # default configured value for end_of_term is taken
