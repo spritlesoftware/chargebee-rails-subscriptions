@@ -47,6 +47,24 @@ ChargebeeRails.configure do |config|
 end
 ```
 
+Update Subscriber
+
+```ruby
+ChargebeeRails.update_subscriber(subscriber, {})
+```
+
+Update Billing Address
+
+```ruby
+ChargebeeRails.update_billing_addr(subscriber, {})
+```
+
+Add Subscriber Contacts
+
+```ruby
+ChargebeeRails.add_subscriber_contacts(subscriber, {})
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
