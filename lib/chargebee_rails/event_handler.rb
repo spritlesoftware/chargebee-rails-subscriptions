@@ -48,7 +48,7 @@ module ChargebeeRails
 
     def subscription_deleted; end
 
-    def pending_invoice_created; end
+    def invoice_created; end
 
     def invoice_generated; end
 

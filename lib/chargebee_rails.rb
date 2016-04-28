@@ -11,6 +11,7 @@ require "chargebee_rails/subscription_builder"
 require "chargebee_rails/hosted_page_subscription_manager"
 require "chargebee_rails/subscriber"
 require "chargebee_rails/card"
+require "chargebee_rails/metered_billing"
 
 module ChargebeeRails
 
