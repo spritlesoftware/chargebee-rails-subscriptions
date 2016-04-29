@@ -47,6 +47,9 @@ ChargebeeRails.configure do |config|
 end
 ```
 
+
+## Subscription
+
 Update Subscriber
 
 ```ruby
@@ -65,7 +68,7 @@ Add Subscriber Contacts
 ChargebeeRails.add_subscriber_contacts(subscriber, {})
 ```
 
-Metered Billing
+## Metered Billing
 
 Add Charge to Pending Invoice
 
