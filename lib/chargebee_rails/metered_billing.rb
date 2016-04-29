@@ -5,16 +5,16 @@ module ChargebeeRails
       # Add charge to pending invoice
       def add_charge(invoice_id, amount, description)
         ChargeBee::Invoice.add_charge(invoice_id, {
-          :amount => amount, 
-          :description => description
+          amount: amount, 
+          description: description
         }).invoice
       end
 
       # Add addon charge to pending invoice
       def add_addon_charge(invoice_id, addon_id, addon_quantity=1)
         ChargeBee::Invoice.add_addon_charge(invoice_id, {
-          :addon_id => addon_id,
-          :addon_quantity => addon_quantity
+          addon_id: addon_id,
+          addon_quantity: addon_quantity
         }).invoice
       end
 
