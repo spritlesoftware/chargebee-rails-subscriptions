@@ -69,20 +69,33 @@ ChargebeeRails.add_subscriber_contacts(subscriber, {})
 ```
 
 ## Metered Billing
+Metered billing, or usage based subscriptions typically works with a plan that includes a base fee and a usage fee.
 
-Add Charge to Pending Invoice
+**Note**: You need to enable metered billing manually in chargebee web interface**
+
+
+**Add Charge to Pending Invoice**
+
+
+To add the line items to the invoice after you have calculated how much the customer needs to be charged.
 
 ```ruby
 ChargebeeRails::MeteredBilling.add_charge(invoice_id, amount, description)
 ```
+invoice_id : Unique id of the invoice
 
-Add addon charge to pending invoice
+amount : The amount to be charged required, in cents, min=1
+
+description : Detailed description about this lineitem.
+
+**Add addon charge to pending invoice**
+ 
 
 ```ruby
 ChargebeeRails::MeteredBilling.add_addon_charge(invoice_id, addon_id, addon_quantity)
 ```
 
-Close invoice
+**Close invoice**
 
 ```ruby
 ChargebeeRails::MeteredBilling.close_invoice(invoice_id)
