@@ -65,6 +65,26 @@ Add Subscriber Contacts
 ChargebeeRails.add_subscriber_contacts(subscriber, {})
 ```
 
+Metered Billing
+
+Add Charge to Pending Invoice
+
+```ruby
+ChargebeeRails::MeteredBilling.add_charge(invoice_id, amount, description)
+```
+
+Add addon charge to pending invoice
+
+```ruby
+ChargebeeRails::MeteredBilling.add_addon_charge(invoice_id, addon_id, addon_quantity)
+```
+
+Close invoice
+
+```ruby
+ChargebeeRails::MeteredBilling.close_invoice(invoice_id)
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
