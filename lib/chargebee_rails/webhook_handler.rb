@@ -1,5 +1,5 @@
 module ChargebeeRails
-  module EventHandler
+  module WebhookHandler
 
     # Handle the ChargeBee event retrieved from webhook and call the
     # corresponding event type handler for the event
