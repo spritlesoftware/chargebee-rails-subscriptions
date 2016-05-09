@@ -48,7 +48,9 @@ module ChargebeeRails
 
     def subscription_deleted; end
 
-    def invoice_created; end
+    def invoice_created
+      ChargeBee::Invoice.collect(@event.content.invoice.id)
+    end
 
     def invoice_generated; end
 
