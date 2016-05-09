@@ -97,7 +97,6 @@ module ChargebeeRails
     end
 
     def handle_remote_chargebee_subscription_updates
-      puts "inside handle subscription", event
       subscription_event = event.content.subscription
       subscription = ::Subscription.find_by(chargebee_id: subscription_event.id)
       subscription.update(
