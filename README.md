@@ -1,12 +1,9 @@
-# ChargebeeRails
-
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/chargebee_rails`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+# Chargebee Rails Library - API V2
+This is the Rails gem for integrating with Chargebee. Sign up for a Chargebee account [here](https://www.chargebee.com).
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Add this line to your Gemfile:
 
 ```ruby
 gem 'chargebee_rails'
@@ -40,7 +37,7 @@ Add your CHARGEBEE_SITE and CHARGEBEE_API_KEY values in config/intializers/charg
 If you have setup plans in chargebee, run this task to sync the plans
 
 ```ruby
-  rake chargebee_rails:sync_plan
+ $ rake chargebee_rails:sync_plan
 ```
 
 
@@ -50,131 +47,152 @@ Configure the app for setting a default plan for you application
 # config/initializers/chargebee_rails.rb
     
 ChargebeeRails.configure do |config|
-    config.default_plan_id = '<your_plan_in_chargebee>'
+  config.default_plan_id = '<your_plan_in_chargebee>'
 end
 ```
 
-## Signup
+## Customer
 
 Creates a new subscription along with the customer.
 
 ```ruby
-    customer = Customer.find(id)
-    customer.subscribe(customer: customer_params)
-```
-## Customer
-
-#####Retrieve a customer
-
- ```ruby   
- customer.as_chargebee_customer
+<customer_object>.subscribe(customer: customer_params)
 ```
 
+Retrieve a customer
 
-##  Hosted pages
+```ruby   
+<customer_object>.as_chargebee_customer
+```
+
+Update a customer
+
+```ruby
+ChargebeeRails.update_subscriber(<customer_object>, {})
+```
+
+Update billing info for a customer
+
+```ruby
+ChargebeeRails.update_billing_addr(<customer_object>, {})
+```
+
+Update Contacts for a customer
+
+```ruby
+ChargebeeRails.add_subscriber_contacts(<customer_object>, {})
+```
+
+## Hosted pages
 
 Checkout new subscription
 
 ```ruby
 hosted_page = ChargeBee::HostedPage.retrieve(params[:hosted_page_id]).hosted_page
-customer.subscribe_via_hosted_page(hosted_page)
+<customer_object>.subscribe_via_hosted_page(hosted_page)
 ```
 
 Checkout existing subscription
 
 ```ruby
 hosted_page = ChargeBee::HostedPage.retrieve(params[:hosted_page_id]).hosted_page
-customer.update_subscription_via_hosted_page(hosted_page)
+<customer_object>.update_subscription_via_hosted_page(hosted_page)
 ```
 
 ## Subscription
 
-Update Subscriber
-
-```ruby
-ChargebeeRails.update_subscriber(subscriber, {})
-```
-
-Update Billing Address
-
-```ruby
-ChargebeeRails.update_billing_addr(subscriber, {})
-```
-
-Add Subscriber Contacts
-
-```ruby
-ChargebeeRails.add_subscriber_contacts(subscriber, {})
-```
 
 Update a subscription
 ```ruby
-customer.update_subscription(plan_id: params[:plan_id], coupon: params[:coupon_id])
+<customer_object>.update_subscription(plan_id: params[:plan_id], coupon: params[:coupon_id])
 ```
 
 Retrieve a subscription
 ```ruby
-subscription.as_chargebee_subscription
+<subscription_object>.as_chargebee_subscription
 ```
-   
+
 Update plan for a subscription
 ```ruby
-subscription.change_plan(plan_object, end_of_term=false)   # end_of_term is optional
+<subscription_object>.change_plan(plan_object, end_of_term=false)   # end_of_term is optional
 ```
 Update plan quantity for subscription
 ```ruby
-subscription.set_plan_quantity(quantity, end_of_term=false)  # end_of_term is optional
+<subscription_object>.set_plan_quantity(quantity, end_of_term=false)  # end_of_term is optional
 ```
 
 Add or remove addons for the subscription
 ```ruby
-subscription.manage_addons(addon_id, quantity=1)
+<subscription_object>.manage_addons(addon_id, quantity=1)
 ```
 
 Cancel a subscription
 ```ruby
-subscription.cancel(params)
+<subscription_object>.cancel(params)
 ```
 
 Remove scheduled cancellation
 ```ruby
-subscription.stop_cancellation
+<subscription_object>.stop_cancellation
 ```
 Reactivate a subscription
 ```ruby
-subscription.reactivate
+<subscription_object>.reactivate
 ```
 ## Estimates
+
 Create subscription estimate
 ```ruby
-estimation_params = {}
+estimation_params = {
+  subscription: {
+    plan_id: "basic"
+  }, 
+  billing_address: {
+    line1: "PO Box 9999", 
+    city: "Walnut", 
+    zip: "91789", 
+    country: "US"
+  }
+}
 Subscription.estimate(estimation_params)
 ```
 Subscription renewal estimate
 ```ruby
-estimation_params = {}
-subscription.estimate(estimation_params)
+estimation_params = { include_delayed_charges: '', use_existing_balances: '' }
+<subscription_object>.estimate(estimation_params)
 ```
+
 Update subscription estimate
 ```ruby
-estimation_params = {}
+estimation_params = {
+subscription: {
+    id: "5cDfREwp3I5lJ", 
+    plan_id: "basic"
+  }, 
+  billing_address: {
+    line1: "PO Box 9999", 
+    city: "Walnut", 
+    zip: "91789", 
+    country: "US"
+  }
+}
 Subscription.estimate_changes(estimation_params)
 ```
 
 ## Invoices
 
-  List invoices
+List invoices
 
 ```ruby
-customer.invoices
+<customer_object>.invoices
 ```
 ## Metered Billing
 Metered billing, or usage based subscriptions typically works with a plan that includes a base fee and a usage fee.
 
-**Note**: You need to enable metered billing manually in chargebee web interface**
+**Note**: You need to enable metered billing manually in chargebee web interface
 
 
-**Add Charge to Pending Invoice**
+Add Charge to Pending Invoice
 
 
 To add the line items to the invoice after you have calculated how much the customer needs to be charged.
@@ -182,43 +200,19 @@ To add the line items to the invoice after you have calculated how much the cust
 ```ruby
 ChargebeeRails::MeteredBilling.add_charge(invoice_id, amount, description)
 ```
-invoice_id : Unique id of the invoice
 
-amount : The amount to be charged required, in cents, min=1
-
-description : Detailed description about this lineitem.
-
-**Add addon charge to pending invoice**
+Add addon charge to pending invoice
  
 
 ```ruby
 ChargebeeRails::MeteredBilling.add_addon_charge(invoice_id, addon_id, addon_quantity)
 ```
 
-**Close invoice**
+Close invoice
 
 ```ruby
 ChargebeeRails::MeteredBilling.close_invoice(invoice_id)
 ```
-
-## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, 
-
-```ruby
-run `bundle exec rake install`
-```
-To release a new version, update the version number in `version.rb`, and then run 
-```ruby
-bundle exec rake release
-```
-which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/chargebee_rails. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
 
 
 ## License
