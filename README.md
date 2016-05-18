@@ -53,7 +53,7 @@ end
 
 ## Customer
 
-Creates a new subscription along with the customer.
+Creates a new subscription for the customer.
 
 ```ruby
 <customer_object>.subscribe(customer: customer_params)
