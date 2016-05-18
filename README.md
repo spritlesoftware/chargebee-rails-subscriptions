@@ -32,11 +32,18 @@ Migrate the changes
 
     $ rake db:migrate
 
-Setup a Plan locally from your chargebee account
+Add your CHARGEBEE_SITE and CHARGEBEE_API_KEY values in config/intializers/chargebee_rails.rb
+
+
+**Sync Plans**
+
+If you have setup plans in chargebee, run this task to sync the plans
 
 ```ruby
-Plan.create(name: "CB Demo Hustle", plan_id: "cbdemo_hustle", price: 49, period: 1, period_unit: "month", status: "active")
+  rake chargebee_rails:sync_plan
 ```
+
+
 Configure the app for setting a default plan for you application
 
 ```ruby
@@ -47,6 +54,38 @@ ChargebeeRails.configure do |config|
 end
 ```
 
+## Signup
+
+Creates a new subscription along with the customer.
+
+```ruby
+    customer = Customer.find(id)
+    customer.subscribe(customer: customer_params)
+```
+## Customer
+
+#####Retrieve a customer
+
+ ```ruby   
+ customer.as_chargebee_customer
+```
+
+
+##  Hosted pages
+
+Checkout new subscription
+
+```ruby
+hosted_page = ChargeBee::HostedPage.retrieve(params[:hosted_page_id]).hosted_page
+customer.subscribe_via_hosted_page(hosted_page)
+```
+
+Checkout existing subscription
+
+```ruby
+hosted_page = ChargeBee::HostedPage.retrieve(params[:hosted_page_id]).hosted_page
+customer.update_subscription_via_hosted_page(hosted_page)
+```
 
 ## Subscription
 
@@ -68,6 +107,47 @@ Add Subscriber Contacts
 ChargebeeRails.add_subscriber_contacts(subscriber, {})
 ```
 
+Update a subscription
+```ruby
+customer.update_subscription(plan_id: params[:plan_id], coupon: params[:coupon_id])
+```
+
+Retrieve a subscription
+```ruby
+subscription.as_chargebee_subscription
+```
+      
+Update plan for a subscription
+```ruby
+subscription.change_plan(plan_object, end_of_term=false)   # end_of_term is optional
+```
+Update plan quantity for subscription
+```ruby
+subscription.set_plan_quantity(quantity, end_of_term=false)  # end_of_term is optional
+```
+
+Add or remove addons for the subscription
+```ruby
+subscription.manage_addons(addon_id, quantity=1)
+```
+
+Cancel a subscription
+```ruby
+subscription.cancel(params)
+```
+
+Remove scheduled cancellation
+```ruby
+subscription.stop_cancellation
+```
+
+## Invoices
+
+  List invoices
+
+```ruby
+customer.invoices
+```
 ## Metered Billing
 Metered billing, or usage based subscriptions typically works with a plan that includes a base fee and a usage fee.
 
