@@ -116,7 +116,7 @@ Retrieve a subscription
 ```ruby
 subscription.as_chargebee_subscription
 ```
-      
+   
 Update plan for a subscription
 ```ruby
 subscription.change_plan(plan_object, end_of_term=false)   # end_of_term is optional
@@ -139,6 +139,26 @@ subscription.cancel(params)
 Remove scheduled cancellation
 ```ruby
 subscription.stop_cancellation
+```
+Reactivate a subscription
+```ruby
+subscription.reactivate
+```
+## Estimates
+Create subscription estimate
+```ruby
+estimation_params = {}
+Subscription.estimate(estimation_params)
+```
+Subscription renewal estimate
+```ruby
+estimation_params = {}
+subscription.estimate(estimation_params)
+```
+Update subscription estimate
+```ruby
+estimation_params = {}
+Subscription.estimate_changes(estimation_params)
 ```
 
 ## Invoices
