@@ -1,4 +1,4 @@
-# Chargebee Rails Library - API V2
+# Chargebee Rails
 This is the Rails gem for integrating with Chargebee. Sign up for a Chargebee account [here](https://www.chargebee.com).
 
 ## Installation
