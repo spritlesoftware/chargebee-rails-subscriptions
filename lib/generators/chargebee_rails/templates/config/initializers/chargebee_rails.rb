@@ -2,6 +2,20 @@ ChargebeeRails.configure do |config|
   # This will be the default plan when a subscription is not provided with one
   # make sure that this plan exists in your active record model
   # config.default_plan_id = 'your_default_plan_id'
+
+  # Specify the default end of term value for subscription related changes like 
+  # subscription updation and cancellation. Setting this as true will make the 
+  # changes for subscription at end of term or at next renewal. Reference - 
+  # https://apidocs.chargebee.com/docs/api/subscriptions#update_a_subscription
+  # config.end_of_term = false
+
+  # Set default proration for subscription related changes Reference - 
+  # https://apidocs.chargebee.com/docs/api/subscriptions#update_a_subscription
+  # config.proration = true
+
+  # Configure the default behavior of including delayed charges while estimating
+  # Reference - https://apidocs.chargebee.com/docs/api/estimates#update_subscription_estimate
+  # config.include_delayed_charges = { changes_estimate: false, renewal_estimate: true }
   
   # setup chargebee with your site and api_key
   config.chargebee_site = 'CHARGEBEE_SITE'
@@ -13,7 +27,7 @@ ChargebeeRails.configure do |config|
 
   # Configure your own webhook path for ChargeBee events
   # the default_path is 'chargebee_rails_event'
-  # config.webhook_api_path = 'chargebee_rails_event' 
+  # config.webhook_api_path = 'chargebee_rails_event'
 
   # Set this as true if you have enabled basic http authentication for your
   # webhook api

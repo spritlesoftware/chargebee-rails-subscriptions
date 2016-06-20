@@ -23,6 +23,7 @@ module ChargebeeRails
     attr_accessor :include_delayed_charges
     attr_accessor :chargebee_site
     attr_accessor :chargebee_api_key
+    attr_accessor :currency
     attr_accessor :webhook_handler
     attr_accessor :webhook_api_path
     attr_accessor :secure_webhook_api
@@ -39,6 +40,7 @@ module ChargebeeRails
       @webhook_authentication = {user: nil, secret: nil}
       @chargebee_site = nil
       @chargebee_api_key = nil
+      @currency = "US Dollars [USD]"
     end
   end
 end

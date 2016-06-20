@@ -1,5 +1,5 @@
 module ChargebeeRails
-  module Subscriber
+  module Customer
 
     # Subscribe customer to a new subscription
     def subscribe(options={})

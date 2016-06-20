@@ -5,8 +5,7 @@ module ChargebeeRails
     # corresponding event type handler for the event
     def handle(chargebee_event)
       @chargebee_event = chargebee_event
-      handle_remote_chargebee_subscription_updates if check_subscription_update
-      send(event.event_type)
+      sync_events_list.include?(event.event_type) ? sync_events : send(event.event_type)
     end
 
     # Set event as ChargeBee event
@@ -26,7 +25,7 @@ module ChargebeeRails
 
     def subscription_started; end
 
-    def subscription_trial_ending; end
+    def subscription_trial_end_reminder; end
 
     def subscription_activated; end
 
@@ -48,8 +47,8 @@ module ChargebeeRails
 
     def subscription_deleted; end
 
-    def invoice_created
-      ChargeBee::Invoice.collect(@event.content.invoice.id)
+    def pending_invoice_created
+      ::ChargebeeRails::MeteredBilling.close_invoice(@event.content.invoice.id)
     end
 
     def invoice_generated; end
@@ -94,23 +93,81 @@ module ChargebeeRails
 
     private
 
-    def check_subscription_update
-      remote_subscription_events.include? event.event_type
+    def sync_events_list
+      %w( 
+        card_expired
+        card_updated
+        card_expiry_reminder
+        subscription_started
+        subscription_trial_end_reminder
+        subscription_activated
+        subscription_changed
+        subscription_cancellation_scheduled
+        subscription_cancellation_reminder
+        subscription_cancelled
+        subscription_reactivated
+        subscription_renewed
+        subscription_scheduled_cancellation_removed
+        subscription_renewal_reminder
+      )
     end
 
-    def handle_remote_chargebee_subscription_updates
-      subscription_event = event.content.subscription
-      subscription = ::Subscription.find_by(chargebee_id: subscription_event.id)
-      subscription.update(
-        chargebee_plan: subscription_event.plan_id,
-        plan: ::Plan.find_by(plan_id: subscription_event.plan_id),
-        status: subscription_event.status,
-        has_scheduled_changes: subscription_event.has_scheduled_changes
-      ) if subscription.try(:has_scheduled_changes)
+    def sync_events
+      sync(existing_subscription, subscription_attrs(event.content.subscription)) if event.event_type.include?('subscription') && can_sync?(existing_subscription)
+      sync(existing_payment_method, payment_method_attrs(event.content.customer, event.content.card)) if event.event_type.include?('card') && event.content.customer.payment_method.present? && can_sync?(existing_payment_method)
     end
 
-    def remote_subscription_events
-      %w( subscription_activated subscription_changed subscription_renewed subscription_cancelled )
+    def sync obj, attrs
+      obj.update_all(attrs)
+      send(event.event_type)
+    end
+
+    def existing_subscription
+      @existing_subscription ||= ::Subscription.where(chargebee_id: event.content.subscription.id)
+    end
+
+    def existing_payment_method
+      @existing_payment_method ||= ::PaymentMethod.where(cb_customer_id: event.content.customer.id)
+    end
+
+    def can_sync? obj
+      obj.first && (obj.first.event_last_modified_at.to_i < event.occurred_at)
+    end
+
+    def subscription_attrs subscription
+      {
+        chargebee_id: subscription.id,
+        plan_id: ::Plan.find_by(plan_id: subscription.plan_id).id,
+        plan_quantity: subscription.plan_quantity,
+        status: subscription.status,
+        event_last_modified_at: event.occurred_at,
+        updated_at: Time.now,
+        chargebee_data: chargebee_subscription_data(subscription)
+      }
+    end
+
+    def chargebee_subscription_data subscription
+      {
+        trial_ends_at: subscription.trial_end,
+        next_renewal_at: subscription.current_term_end,
+        cancelled_at: subscription.cancelled_at,
+        is_scheduled_for_cancel: (subscription.status == 'non-renewing' ? true : false),
+        has_scheduled_changes: subscription.has_scheduled_changes
+      }
+    end
+
+    def payment_method_attrs customer, card
+      {
+        cb_customer_id: customer.id,
+        auto_collection: customer.auto_collection,
+        payment_type: customer.payment_method.type,
+        reference_id: customer.payment_method.reference_id,
+        card_last4: card.last4,
+        card_type: card.card_type,
+        status: customer.payment_method.status,
+        event_last_modified_at: event.occurred_at,
+        updated_at: Time.now
+      }
     end
 
   end

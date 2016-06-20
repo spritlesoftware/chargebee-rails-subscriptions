@@ -20,7 +20,7 @@ module ChargebeeRails
 
       # Close pending invoice
       def close_invoice(invoice_id)
-        ChargeBee::Invoice.collect(invoice_id).invoice
+        ChargeBee::Invoice.close(invoice_id).invoice
       end
 
     end

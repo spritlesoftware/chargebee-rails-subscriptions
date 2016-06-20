@@ -7,45 +7,122 @@ module ChargebeeRails
     end
 
     def create
+      @customer.update(
+        chargebee_id: hosted_customer.id,
+        chargebee_data: chargebee_customer_data
+      )
       @subscription = @customer.create_subscription(subscription_attrs)
-      create_card_for_subscription
+      manage_payment_method if hosted_payment_method.present?
       @subscription
     end
 
     def update
       @subscription = @customer.subscription
       @subscription.update(subscription_attrs)
-      create_card_for_subscription
+      manage_payment_method if hosted_payment_method.present?
       @subscription
     end
 
     private
 
-    def subscription_attrs
-      {
-        chargebee_id: hosted_subscription.id,
-        chargebee_plan: hosted_subscription.plan_id,
-        status: hosted_subscription.status,
-        has_scheduled_changes: hosted_subscription.has_scheduled_changes,
-        plan: Plan.find_by(plan_id: hosted_subscription.plan_id)
-      }
+    def manage_payment_method
+      @subscription.payment_method.present? &&
+      @subscription.payment_method.update(payment_method_attrs) ||
+      create_payment_method
     end
 
-    def create_card_for_subscription
-      @subscription.create_card(
-        cb_customer_id: hosted_card.customer_id,
-        last4: hosted_card.last4,
-        card_type: hosted_card.card_type,
-        status: hosted_card.status
-      )
+    # Create the payment method for the subscription
+    def create_payment_method
+      @subscription.create_payment_method(payment_method_attrs)
     end
 
     def hosted_subscription
       @hosted_subscription ||= @hosted_page.content.subscription
     end
 
+    def hosted_customer
+      @hosted_customer ||= @hosted_page.content.customer
+    end
+
+    def hosted_payment_method
+      @hosted_payment_method ||= hosted_customer.payment_method
+    end
+
     def hosted_card
       @hosted_card ||= @hosted_page.content.card
+    end
+
+    def hosted_billing_address
+      @hosted_billing_address ||= @hosted_customer.billing_address
+    end
+
+    def subscription_attrs
+      {
+        chargebee_id: hosted_subscription.id,
+        status: hosted_subscription.status,
+        plan_quantity: hosted_subscription.plan_quantity,
+        chargebee_data: chargebee_subscription_data,
+        plan: Plan.find_by(plan_id: hosted_subscription.plan_id)
+      }
+    end
+
+    def chargebee_subscription_data
+      {
+        trial_ends_at: hosted_subscription.trial_end,
+        next_renewal_at: hosted_subscription.current_term_end,
+        cancelled_at: hosted_subscription.cancelled_at,
+        is_scheduled_for_cancel: (hosted_subscription.status == 'non-renewing' ? true : false),
+        has_scheduled_changes: hosted_subscription.has_scheduled_changes
+      }
+    end
+
+    def chargebee_customer_data
+      {
+        customer_details: customer_details(hosted_customer),
+        billing_address: billing_address(hosted_customer.billing_address)
+      }
+    end
+
+    def customer_details customer
+      {
+        first_name: customer.first_name,
+        last_name: customer.last_name,
+        email: customer.email,
+        company: customer.company,
+        vat_number: customer.vat_number
+      }
+    end
+
+    def billing_address customer_billing_address
+      {
+        first_name: customer_billing_address.first_name,
+        last_name: customer_billing_address.last_name,
+        company: customer_billing_address.company,
+        address_line1: customer_billing_address.line1,
+        address_line2: customer_billing_address.line2,
+        address_line3: customer_billing_address.line3,
+        city: customer_billing_address.city,
+        state: customer_billing_address.state,
+        country: customer_billing_address.country,
+        zip: customer_billing_address.zip
+      } if customer_billing_address.present?
+    end
+
+    def payment_method_attrs
+      if hosted_payment_method.type == 'card'
+        card_last4, card_type = hosted_card.last4, hosted_card.card_type
+      else
+        card_last4, card_type = nil, nil
+      end
+      {
+        cb_customer_id: hosted_customer.id,
+        auto_collection: hosted_customer.auto_collection,
+        payment_type: hosted_payment_method.type,
+        reference_id: hosted_payment_method.reference_id,
+        card_last4: card_last4, 
+        card_type: card_type,
+        status: hosted_payment_method.status
+      }
     end
 
   end

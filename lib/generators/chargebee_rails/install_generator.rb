@@ -11,6 +11,9 @@ module ChargebeeRails
       [File.expand_path("../templates", __FILE__)]
     end
 
+    def self.next_migration_number(dir)
+      Time.now.utc.strftime("%Y%m%d%H%M%S")
+    end
 
     # Override subscriber_model to ensure it is always returned lowercase.
     def subscriber_model
@@ -18,29 +21,28 @@ module ChargebeeRails
     end
 
     def install
-      # unless defined?(ChargebeeRails)
-      #   gem("chargebee_rails")
-      # end
 
-      # require "securerandom"
+      # Generate chargebee_rails configuration file template
       template "config/initializers/chargebee_rails.rb"
 
-      # Generate subscription.
-      generate("model", "subscription chargebee_id:string chargebee_plan:string status:string has_scheduled_changes:boolean plan_id:integer #{subscriber_model}_id:integer plan_quantity:integer trial_ends_at:datetime next_renewal_at:datetime canceled_at:datetime")
-      template "app/models/subscription.rb"
-
       # Generate plan.
-      generate("model", "plan name:string plan_id:string price:decimal status:string")
+      generate("model", "plan name:string plan_id:string status:string chargebee_data:text")
       template "app/models/plan.rb"
 
-      # Generate card.
-      generate("model card cb_customer_id:string last4:string card_type:string status:string subscription_id:integer")
-      template "app/models/card.rb"
+      # Generate subscription.
+      migration_template "new_subscription_migration.rb", "db/migrate/create_subscriptions.rb"
+      template "app/models/subscription.rb"
+
+      # Generate payment methods.
+      generate("model", "payment_method cb_customer_id:string auto_collection:boolean payment_type:string reference_id:string card_last4:string card_type:string status:string event_last_modified_at:datetime subscription:references")
+
+      # Generate chargebee rails event.
+      migration_template "event_sync_log_migration.rb", "db/migrate/create_event_sync_log.rb"
 
       # Update the owner relationship and add related_fields.
-      generate("migration add_chargebee_id_to_#{subscriber_model} chargebee_id:string")
+      generate("migration", "add_chargebee_id_to_#{subscriber_model} chargebee_id:string event_last_modified_at:datetime chargebee_data:text")
       inject_into_class "app/models/#{subscriber_model}.rb", subscriber_model.camelize.constantize,
-                        "# Added by ChargebeeRails.\n  has_one :subscription\n\n include ChargebeeRails::Subscriber\n\n"
+                        "  include ChargebeeRails::Customer\n\n  # Added by ChargebeeRails.\n  has_one :subscription\n  serialize :chargebee_data, JSON\n"
     end
   end
 end

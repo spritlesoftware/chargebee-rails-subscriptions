@@ -12,26 +12,29 @@ module ChargebeeRails
     end
 
     # Update plan for a subscription
-    def change_plan(plan, end_of_term=nil)
+    def change_plan(plan, end_of_term=nil, prorate=nil)
       end_of_term ||= ChargebeeRails.configuration.end_of_term
-      subscription = ChargeBee::Subscription.update(
-        chargebee_id, { plan_id: plan.plan_id, end_of_term: end_of_term }
+      prorate ||= ChargebeeRails.configuration.proration
+      chargebee_subscription = ChargeBee::Subscription.update(
+        chargebee_id, { plan_id: plan.plan_id, end_of_term: end_of_term, prorate: prorate }
       ).subscription
-      update(subscription_attributes(subscription, plan))
+      update(subscription_attrs(chargebee_subscription, plan))
     end
 
     # Update plan quantity for subscription
-    def set_plan_quantity(quantity, end_of_term=false)
-      subscription = ChargeBee::Subscription.update(
-        chargebee_id, { plan_quantity: quantity, end_of_term: end_of_term }
+    def set_plan_quantity(quantity, end_of_term=nil, prorate=nil)
+      end_of_term ||= ChargebeeRails.configuration.end_of_term
+      prorate ||= ChargebeeRails.configuration.proration
+      chargebee_subscription = ChargeBee::Subscription.update(
+        chargebee_id, { plan_quantity: quantity, end_of_term: end_of_term, prorate: prorate }
       ).subscription
-      update(subscription_attributes(subscription, plan))
+      update(subscription_attrs(chargebee_subscription, self.plan))
     end
 
     # Add or remove addons for the subscription
-    def manage_addons(addon_id, quantity=1)
-      subscription = ChargeBee::Subscription.update(
-        chargebee_id, { addons: [{ id: addon_id, quantity: quantity }] }
+    def manage_addons(addon_id, quantity=1, replace_addon_list=false)
+      chargebee_subscription = ChargeBee::Subscription.update(
+        chargebee_id, { replace_addon_list: replace_addon_list, addons: [{ id: addon_id, quantity: quantity }] }
       ).subscription
     end
 
@@ -40,20 +43,14 @@ module ChargebeeRails
     # default configured value for end_of_term is taken
     def cancel(options={})
       options[:end_of_term] ||= ChargebeeRails.configuration.end_of_term
-      subscription = ChargeBee::Subscription.cancel(chargebee_id, options).subscription
-      update(status: subscription.status)
+      chargebee_subscription = ChargeBee::Subscription.cancel(chargebee_id, options).subscription
+      update(status: chargebee_subscription.status)
     end
 
     # Stop a scheduled cancellation of a subscription
     def stop_cancellation
-      subscription = ChargeBee::Subscription.remove_scheduled_cancellation(chargebee_id).subscription
-      update(status: subscription.status)
-    end
-
-    # Reactivate a cancelled subscription
-    def reactivate
-      subscription = ChargeBee::Subscription.reactivate(chargebee_id).subscription
-      update(status: subscription.status)
+      chargebee_subscription = ChargeBee::Subscription.remove_scheduled_cancellation(chargebee_id).subscription
+      update(status: chargebee_subscription.status)
     end
 
     # Estimates the subscription's renewal  
@@ -66,6 +63,7 @@ module ChargebeeRails
       
       # Estimates the cost of subscribing to a new subscription
       def estimate(estimation_params)
+        estimation_params[:trial_end] ||= 0
         ::ChargeBee::Estimate.create_subscription(estimation_params).estimate
       end
 
@@ -73,6 +71,7 @@ module ChargebeeRails
       # estimates the upgrade/downgrade or other changes
       def estimate_changes(estimation_params)
         estimation_params[:include_delayed_charges] ||= ChargebeeRails.configuration.include_delayed_charges[:changes_estimate]
+        estimation_params[:prorate] ||= ChargebeeRails.configuration.proration
         ::ChargeBee::Estimate.update_subscription(estimation_params).estimate
       end
 
@@ -80,11 +79,22 @@ module ChargebeeRails
 
     private
 
-    def subscription_attributes(subscription, plan)
-      { 
-        chargebee_plan: subscription.plan_id, 
-        plan_id: plan.id, 
+    def subscription_attrs(subscription, plan)
+      {
+        chargebee_id: subscription.id,
+        plan_id: plan.id,
+        plan_quantity: subscription.plan_quantity,
         status: subscription.status,
+        chargebee_data: chargebee_subscription_data(subscription)
+      }
+    end
+
+    def chargebee_subscription_data subscription
+      {
+        trial_ends_at: subscription.trial_end,
+        next_renewal_at: subscription.current_term_end,
+        cancelled_at: subscription.cancelled_at,
+        is_scheduled_for_cancel: (subscription.status == 'non-renewing' ? true : false),
         has_scheduled_changes: subscription.has_scheduled_changes
       }
     end
