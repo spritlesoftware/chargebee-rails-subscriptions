@@ -33,7 +33,7 @@ namespace :chargebee_rails do
   end
 
   def retrieve_plan_list
-    options = { linit: 100 }
+    options = { limit: 100 }
     options[:offset] = @offset if @offset.present?
     ChargeBee::Plan.list(options)
   end
