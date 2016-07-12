@@ -1,7 +1,7 @@
 namespace :chargebee_rails do
 
   desc "chargebee plans sync with application"
-  task :sync_plan => :environment do
+  task :sync_plans => :environment do
     # Prompt user input to get confirmation of the plan sync
     begin
       STDOUT.puts "\n This will sync plans in your application with chargebee, do you want to continue ? [y/n]"
