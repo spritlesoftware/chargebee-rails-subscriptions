@@ -13,34 +13,77 @@ require "chargebee_rails/customer"
 require "chargebee_rails/metered_billing"
 
 module ChargebeeRails
-  # Update the chargebee customer details by passing the subscription owner object
-  # and the details hash as the options
+  # This method is used to update the chargebee customer and also reflects the
+  # changes to the subscription owner in the application.
+  # * *Args*    :
+  #   - +customer+ -> the subscription owner
+  #   - +options+ -> the options hash allowed for customer update in chargebee 
+  # For more details on the options hash, refer the input parameters for
+  # https://apidocs.chargebee.com/docs/api/customers?lang=ruby#update_a_customer
+  # * *Returns* :
+  #   - the updated subscription owner
+  # * *Raises*  :
+  #   - +ChargeBee::InvalidRequestError+ -> If customer or options is invalid
+  #
   def self.update_customer(customer, options={})
     chargebee_customer = ChargeBee::Customer.update(customer.chargebee_id, options).customer
     customer.update(chargebee_id: chargebee_customer.id, chargebee_data: chargebee_customer_data(chargebee_customer))
     customer
   end
 
-  # Updating the billing address of the subscription owner. The subscription
-  # owner object and the billing address details as options must be provided
-  def self.update_billing_addr(customer, options={})
+  # Update the billing information of the chargebee customer. The changes in the
+  # billing details are also reflected in the subscription owner's 
+  # +chargebee_customer_data+ 
+  # * *Args*    :
+  #   - +customer+ -> the subscription owner
+  #   - +options+ -> the options hash allowed for updating customer billing info in chargebee 
+  # For more details on the options hash, refer the input parameters for
+  # https://apidocs.chargebee.com/docs/api/customers?lang=ruby#update_billing_info_for_a_customer
+  # * *Returns* :
+  #   - the updated subscription owner
+  # * *Raises*  :
+  #   - +ChargeBee::InvalidRequestError+ -> If customer or options is invalid
+  #
+  def self.update_billing_info(customer, options={})
     chargebee_customer = ChargeBee::Customer.update_billing_info(customer.chargebee_id, options).customer
     customer.update(chargebee_id: chargebee_customer.id, chargebee_data: chargebee_customer_data(chargebee_customer))
     customer
   end
 
-  # Adding contacts to a chargebee customer - subscriber is the subscription owner 
-  # object and the contact details hash is given as options
+  # Add contacts to a chargebee customer, the subscription owner 
+  # and the contact details hash is given as options.
+  # * *Args*    :
+  #   - +customer+ -> the subscription owner
+  #   - +options+ -> the options hash allowed for adding contacts to customer in chargebee 
+  # For more details on the options hash, refer the input parameters for
+  # https://apidocs.chargebee.com/docs/api/customers?lang=ruby#add_contacts_to_a_customer
+  # * *Returns* :
+  #   - the updated chargebee customer
+  # * *Raises*  :
+  #   - +ChargeBee::InvalidRequestError+ -> If customer or options is invalid
+  #
   def self.add_customer_contacts(customer, options={})
     ChargeBee::Customer.add_contact(customer.chargebee_id, options).customer
   end
 
-  # Updating the contacts for a chargebee customer - the chargebee contact id
+  # Update the contacts for a chargebee customer - the chargebee contact id
   # must be passed in the options to update the existing contact for the
-  # subscription owner 
+  # subscription owner
+  # * *Args*    :
+  #   - +customer+ -> the subscription owner
+  #   - +options+ -> the options hash allowed for updating customer contacts in chargebee 
+  # For more details on the options hash, refer the input parameters for
+  # https://apidocs.chargebee.com/docs/api/customers?lang=ruby#update_contacts_for_a_customer
+  # * *Returns* :
+  #   - the updated chargebee customer
+  # * *Raises*  :
+  #   - +ChargeBee::InvalidRequestError+ -> If customer or options is invalid
+  #
   def self.update_customer_contacts(customer, options={})
     ChargeBee::Customer.update_contact(customer.chargebee_id, options).customer
   end
+
+  private
 
   def chargebee_customer_data customer
     {

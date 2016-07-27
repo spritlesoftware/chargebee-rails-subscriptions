@@ -27,7 +27,7 @@ ChargebeeRails.configure do |config|
 
   # Configure your own webhook path for ChargeBee events
   # the default_path is 'chargebee_rails_event'
-  # config.webhook_api_path = 'chargebee_rails_event'
+  # config.webhook_api_path = 'your_webhook_path'
 
   # Set this as true if you have enabled basic http authentication for your
   # webhook api

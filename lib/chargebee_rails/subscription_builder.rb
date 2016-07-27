@@ -6,9 +6,9 @@ module ChargebeeRails
       @options = options
     end
 
-    # Here we will create a subscription in Chargebee,
+    # Create a subscription in Chargebee,
     # update the resulting subscription details for the customer in the 
-    # application database and finally return the subscription
+    # application and finally return the subscription
     def create
       build_subscription_payload
       create_subscriptions
@@ -16,8 +16,8 @@ module ChargebeeRails
       @subscription
     end
 
-    # Here we will create a subscription in Chargebee,
-    # the resulting subscription details are then updated in application database
+    # Update existing subscription in Chargebee,
+    # the resulting subscription details are then updated in application
     def update
       update_subscriptions
       manage_payment_method if chargebee_payment_method.present?
@@ -45,6 +45,7 @@ module ChargebeeRails
       @subscription.update(subscription_attrs)
     end
 
+    # Update payment method for subscrption if one exists or create new one
     def manage_payment_method
       @subscription.payment_method.present? &&
       @subscription.payment_method.update(payment_method_attrs) ||

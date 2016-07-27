@@ -1,3 +1,4 @@
+# :nodoc: all
 module ChargebeeRails
   
   class Error < StandardError

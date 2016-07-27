@@ -1,3 +1,4 @@
+# :nodoc:all
 module ChargebeeRails
   module WebhookHandler
 

@@ -101,47 +101,55 @@ hosted_page = ChargeBee::HostedPage.retrieve(params[:hosted_page_id]).hosted_pag
 
 ## Subscription
 
-
 Update a subscription
+
 ```ruby
 <customer_object>.update_subscription(plan_id: params[:plan_id], coupon: params[:coupon_id])
 ```
 
 Retrieve a subscription
+
 ```ruby
 <subscription_object>.as_chargebee_subscription
 ```
 
 Update plan for a subscription
+
 ```ruby
 <subscription_object>.change_plan(plan_object, end_of_term=false)   # end_of_term is optional
 ```
 Update plan quantity for subscription
+
 ```ruby
 <subscription_object>.set_plan_quantity(quantity, end_of_term=false)  # end_of_term is optional
 ```
 
 Add or remove addons for the subscription
+
 ```ruby
 <subscription_object>.manage_addons(addon_id, quantity=1)
 ```
 
 Cancel a subscription
+
 ```ruby
 <subscription_object>.cancel(params)
 ```
 
 Remove scheduled cancellation
+
 ```ruby
 <subscription_object>.stop_cancellation
 ```
 Reactivate a subscription
+
 ```ruby
 <subscription_object>.reactivate
 ```
 ## Estimates
 
 Create subscription estimate
+
 ```ruby
 estimation_params = {
   subscription: {
@@ -157,12 +165,14 @@ estimation_params = {
 Subscription.estimate(estimation_params)
 ```
 Subscription renewal estimate
+
 ```ruby
 estimation_params = { include_delayed_charges: '', use_existing_balances: '' }
 <subscription_object>.estimate(estimation_params)
 ```
 
 Update subscription estimate
+
 ```ruby
 estimation_params = {
 subscription: {

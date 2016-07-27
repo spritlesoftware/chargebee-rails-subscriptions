@@ -6,6 +6,8 @@ module ChargebeeRails
       @hosted_page = hosted_page
     end
 
+    # Create a subscription for the customer in application, 
+    # from the subscription details got from chargebee's hosted page
     def create
       @customer.update(
         chargebee_id: hosted_customer.id,
@@ -16,6 +18,8 @@ module ChargebeeRails
       @subscription
     end
 
+    # Update the subscription for the customer in application, 
+    # from the subscription details got from chargebee's hosted page
     def update
       @subscription = @customer.subscription
       @subscription.update(subscription_attrs)
@@ -25,6 +29,7 @@ module ChargebeeRails
 
     private
 
+    # Update payment method for subscrption if one exists or create new one
     def manage_payment_method
       @subscription.payment_method.present? &&
       @subscription.payment_method.update(payment_method_attrs) ||

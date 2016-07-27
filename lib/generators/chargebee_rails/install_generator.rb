@@ -1,4 +1,10 @@
+# This generator is based on rails_admin's install generator.
+# https://www.github.com/sferik/rails_admin/master/lib/generators/rails_admin/install_generator.rb
+
 require 'rails/generators'
+
+# http://guides.rubyonrails.org/generators.html
+
 module ChargebeeRails
   class InstallGenerator < Rails::Generators::Base
 
@@ -7,10 +13,12 @@ module ChargebeeRails
     argument :subscriber_model, :type => :string, :required => true, :desc => "Owner of the subscription"
     desc "ChargebeeRails installation generator"
 
+    # The path for the custom migration templates
     def self.source_paths
       [File.expand_path("../templates", __FILE__)]
     end
 
+    # Next migration number
     def self.next_migration_number(dir)
       Time.now.utc.strftime("%Y%m%d%H%M%S")
     end
@@ -39,8 +47,10 @@ module ChargebeeRails
       # Generate chargebee rails event.
       migration_template "event_sync_log_migration.rb", "db/migrate/create_event_sync_log.rb"
 
-      # Update the owner relationship and add related_fields.
+      # Add related fields to the subscription owner table
       generate("migration", "add_chargebee_id_to_#{subscriber_model} chargebee_id:string event_last_modified_at:datetime chargebee_data:text")
+
+      # Specify the relationship between subscription and owner
       inject_into_class "app/models/#{subscriber_model}.rb", subscriber_model.camelize.constantize,
                         "  include ChargebeeRails::Customer\n\n  # Added by ChargebeeRails.\n  has_one :subscription\n  serialize :chargebee_data, JSON\n"
     end
