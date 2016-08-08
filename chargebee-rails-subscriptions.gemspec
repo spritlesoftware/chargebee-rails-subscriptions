@@ -6,8 +6,8 @@ require 'chargebee_rails/version'
 Gem::Specification.new do |spec|
   spec.name          = "chargebee-rails-subscriptions"
   spec.version       = ChargebeeRails::VERSION
-  spec.authors       = ["ChargeBee", "Spritle"]
-  spec.email         = ["info@chargebee.com", "info@spritle.com"]
+  spec.authors       = ["Chargebee", "Spritle"]
+  spec.email         = ["chargebee@spritle.com"]
 
   spec.summary       = %q{A subscription management gem for Rails with ChargeBee.}
   spec.description   = %q{This gem provides developers with the ability to easily
