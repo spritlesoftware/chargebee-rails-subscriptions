@@ -59,7 +59,7 @@ If the rest-client version is less than 1.8.0, update the latest version by runn
 
 ```ruby
 
-    $ bundle update rest-client
+    bundle update rest-client
 
 ```
 
@@ -74,7 +74,7 @@ Add the below line to your Gemfile:
 
 ```ruby
 
-    $ gem 'chargebee_rails'
+    gem 'chargebee_rails'
 
 ```
 
@@ -82,7 +82,7 @@ And, run
 
 ```ruby
 
-    $ bundle
+    bundle
 
 ```
 
@@ -99,7 +99,7 @@ The entity name has to be passed in _&lt;subscription_owner_entity&gt;_, so that
 
 ```ruby
 
-    $ rails g chargebee_rails:install <subscription_owner_entity>
+    rails g chargebee_rails:install <subscription_owner_entity>
 
 ```
 
@@ -108,7 +108,7 @@ Allow migration to override templates
 
 ```ruby
 
-    $ rake db:migrate
+    rake db:migrate
 
 ```
 
@@ -200,7 +200,7 @@ The plans can be synced to your application using the following command:
 
 ```ruby
 
-    $ rake chargebee_rails:sync_plans
+    rake chargebee_rails:sync_plans
 
 ```
 
@@ -215,7 +215,7 @@ Chargebee attempts to send webhook notifications for upto 2 days. After 2 days, 
 
 ```ruby
 
-    $: rake chargebee_rails:sync_failed_events
+    rake chargebee_rails:sync_failed_events
 
 ```
 
