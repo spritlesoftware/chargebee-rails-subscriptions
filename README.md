@@ -1,5 +1,5 @@
 # Chargebee Rails
-This is the Rails gem for integrating with Chargebee. Sign up for a Chargebee account [here](https://www.chargebee.com).
+This is the Rails gem for integrating with Chargebee. If you're new to Chargebee, sign up for an account [here](https://www.chargebee.com).
 
 [Introduction](#introduction)
 
@@ -337,14 +337,34 @@ If you’d like to include delayed charges during [update_subscription_estimate]
 
  ```ruby
  
- 
     ChargebeeRails.update_customer(customer, {})
-    Update billing info for a customer
-    ChargebeeRails.update_billing_addr(customer, {})
-    Update Contacts for a customer
-    ChargebeeRails.add_customer_contacts(customer, {})
+
+``` 
+    
+**Update billing info for a Customer**
+
+```ruby
+  
+  ChargebeeRails.update_billing_addr(customer, {})
+  
+```
+  
+**Update contacts for a customer**
+
+```ruby
+
+ChargebeeRails.add_customer_contacts(customer, {})
 
  ```
+
+**Retrieve as Chargebee Customer**
+
+```ruby
+
+   customer = Customer.first
+   customer.as_chargebee_customer
+
+```
 
 ##Subscription
 
@@ -476,13 +496,13 @@ Use the below API method to add the line items to the pending invoice after you 
 
 
 
-## Support and Contribution
+## Support and contribution
 
-If you’d like us to guide you through the set up process or if you have any questions regarding the Ruby gem implementation, contact us at chargebee@spritle.com. For features requests or feedback, submit [here](https://github.com/spritlesoftware/chargebee-rails-subscriptions/issues/new).
+If you’d like us to guide you through the set up process or if you have any questions regarding the Ruby gem implementation, contact us at chargebee@spritle.com. For feature requests or feedback, submit [here](https://github.com/spritlesoftware/chargebee-rails-subscriptions/issues/new).
 
 If you have questions regarding how Chargebee works, send an email to support@chargebee.com. 
 
-## Pull Requests
+## Pull requests
 
 If you’ve added new functionalities that you think might be helpful for all, do send us a pull request.
 
