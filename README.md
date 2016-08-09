@@ -149,6 +149,7 @@ You can set up basic authentication for your incoming webhook notifications in `
 ```ruby
 
     config.secure_webhook_api = true
+    
     config.webhook_authentication = {user: username, secret: password}
 
 ```
@@ -275,8 +276,7 @@ If you would like to control the subscription upgrade/downgrade behaviour, you c
 
 ```ruby
 
-    config/initializers/chargebee_rails.rb.
-    
+    config/initializers/chargebee_rails.rb
 
 ```
 
@@ -303,37 +303,25 @@ If you’d like to include delayed charges during [update_subscription_estimate]
  ```ruby
  
     config.include_delayed_charges = { 
-    changes_estimate: false, 
-    renewal_estimate: true 
+      changes_estimate: false, 
+      renewal_estimate: true 
     }
 
  ```
 
 ##Customer
 
-**Create a Customer**
-
-
- ```ruby
- 
-  ```
-
 **Retrieve as Chargebee Customer**
 
-
-
  ```ruby
- 
- 
+    
+    customer = Customer.first
+    
     customer.as_chargebee_customer
-
 
  ```
 
-
-
 **Update a Customer**
-
 
  ```ruby
  
@@ -345,7 +333,7 @@ If you’d like to include delayed charges during [update_subscription_estimate]
 
 ```ruby
   
-  ChargebeeRails.update_billing_addr(customer, {})
+    ChargebeeRails.update_billing_addr(customer, {})
   
 ```
   
@@ -353,60 +341,42 @@ If you’d like to include delayed charges during [update_subscription_estimate]
 
 ```ruby
 
-ChargebeeRails.add_customer_contacts(customer, {})
+    ChargebeeRails.add_customer_contacts(customer, {})
 
  ```
 
-**Retrieve as Chargebee Customer**
-
-```ruby
-
-   customer = Customer.first
-   customer.as_chargebee_customer
-
-```
 
 ##Subscription
 
 **Create a Subscription**
 
-
  ```ruby
  
     customer = Customer.find(1)
+    
     customer.subscribe(customer: customer_params)
 
  ```
  
- 
  **Update a Subscription**
- 
  
  ```ruby
  
- 
     customer.update_subscription(plan_id: params[:plan_id], coupon: params[:coupon_id])
- 
  
  ```
  
- 
  **Retrieve a Subscription**
- 
  
   ```ruby
  
- 
     subscription = customer.subscription
-
+  
     subscription.as_chargebee_subscription
     
    ```
  
- 
  **Update Plan for a Subscription**
- 
- 
  
 ```ruby
  
@@ -414,52 +384,38 @@ ChargebeeRails.add_customer_contacts(customer, {})
  
  ```
  
- 
 **Update Plan quantity for a Subscription**
- 
  
  ```ruby
  
- 
-    <subscription_object>.set_plan_quantity(quantity, end_of_term=false)  # end_of_term is optional
- 
+    subscription.set_plan_quantity(quantity, end_of_term=false)  # end_of_term is optional
  
  ```
  
- 
  **Add Or remove Addons for a Subscription**
-
   
  ```ruby
  
- 
-     <subscription_object>.manage_addons(addon_id, quantity=1)
-
+    subscription.manage_addons(addon_id, quantity=1)
 
  ```
- 
  
  **Cancel a Subscription**
  
- 
  ```ruby
  
-    <subscription_object>.cancel(params)
+    subscription.cancel(params)
 
  ```
  
- 
- 
  **Remove scheduled cancellation for a Subscription**
-
 
  ``` ruby
  
-    <subscription_object>.stop_cancellation
+    subscription.stop_cancellation
  
   ```
 
- 
 
 # Metered billing
 
@@ -469,6 +425,8 @@ If you’d like to charge your customers based on usage, you could enable the Me
 
 The subscription’s usage charges have to tracked from your end. During renewal, a pending invoice will be created and this will be sent to you through a webhook. You would have to implement the *ChargebeeRails::MeteredBilling.close_invoice(invoice_id)* method where you will get the invoice object. Using the invoice object, you can add the subscription and its charges.
 Use the below API method to add the line items to the pending invoice after you have calculated how much the customer needs to be charged
+
+**Add charge to pending Invoice**
 
 ``` ruby
 
