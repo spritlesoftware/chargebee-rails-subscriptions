@@ -476,8 +476,15 @@ Use the below API method to add the line items to the pending invoice after you 
 
 
 
-Please feel free to reach out to us  at chargebee@spritle.com in case of any queries.
+## Support and Contribution
 
+If you’d like us to guide you through the set up process or if you have any questions regarding the Ruby gem implementation, contact us at chargebee@spritle.com. For features requests or feedback, submit [here](https://github.com/spritlesoftware/chargebee-rails-subscriptions/issues/new).
+
+If you have questions regarding how Chargebee works, send an email to support@chargebee.com. 
+
+## Pull Requests
+
+If you’ve added new functionalities that you think might be helpful for all, do send us a pull request.
 
 ## License
 
