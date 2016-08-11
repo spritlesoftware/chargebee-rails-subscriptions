@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'chargebee_rails/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "chargebee-rails-subscriptions"
+  spec.name          = "chargebee_rails"
   spec.version       = ChargebeeRails::VERSION
   spec.authors       = ["Chargebee", "Spritle"]
   spec.email         = ["chargebee@spritle.com"]
