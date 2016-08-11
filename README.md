@@ -67,14 +67,14 @@ If the rest-client version is less than 1.8.0, update the latest version by runn
 
 # Installation
 
-##Step 1: Install the “chargebee_rails” gem to your application
+##Step 1: Install the “chargebee-rails-subscriptions” gem to your application
 
 Add the below line to your Gemfile:
 
 
 ```ruby
 
-    gem 'chargebee_rails'
+    gem 'chargebee-rails-subscriptions'
 
 ```
 
