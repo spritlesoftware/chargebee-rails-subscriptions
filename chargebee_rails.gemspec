@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.description   = %q{This gem provides developers with the ability to easily
                         integrate chargebee's subscription management into their
                         application backed by active record models.}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/spritlesoftware/chargebee-rails-subscriptions"
   spec.license       = "MIT"
 
   spec.files         = Dir["{app,config,lib}/**/*"] + ["Rakefile", "README.md"]
