@@ -29,9 +29,9 @@ namespace :chargebee_rails do
   end
 
   def sync_plans
-    # puts "Removed #{remove_plans.count} plan(s)"
+    puts "Removed #{remove_plans.count} plan(s)"
     puts "Created #{create_new_plans.count} plan(s)"
-    # puts "Updated all #{update_all_plans.count} plan(s)"
+    puts "Updated all #{update_all_plans.count} plan(s)"
   end
 
   # Retrieve the plan list from chargebee
