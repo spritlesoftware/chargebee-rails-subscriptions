@@ -1,7 +1,7 @@
 module ChargebeeRails
   class WebhooksController < ActionController::Base
     include WebhookHandler
-    before_filter :authenticate, if: "ChargebeeRails.configuration.secure_webhook_api"
+    before_action :authenticate, if: "ChargebeeRails.configuration.secure_webhook_api"
 
     # Handle ChargeBee webhook events
     # From the post request received from chargebee, the event for which the
