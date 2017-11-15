@@ -204,7 +204,8 @@ module ChargebeeRails
         next_renewal_at: subscription.current_term_end,
         cancelled_at: subscription.cancelled_at,
         is_scheduled_for_cancel: (subscription.status == 'non-renewing' ? true : false),
-        has_scheduled_changes: subscription.has_scheduled_changes
+        has_scheduled_changes: subscription.has_scheduled_changes,
+        addons: subscription.addons
       }
     end
 
