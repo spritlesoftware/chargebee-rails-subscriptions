@@ -58,6 +58,26 @@ module ChargebeeRails
 
     def subscription_created; end
 
+    def subscription_started; end
+
+    def subscription_trial_end_reminder; end
+
+    def subscription_activated; end
+
+    def subscription_changed; end
+
+    def subscription_cancellation_scheduled; end
+
+    def subscription_cancellation_reminder; end
+
+    def subscription_cancelled; end
+
+    def subscription_reactivated; end
+
+    def subscription_renewed; end
+
+    def subscription_scheduled_cancellation_removed; end
+
     def subscription_shipping_address_updated; end
 
     def subscription_deleted; end
@@ -78,6 +98,8 @@ module ChargebeeRails
 
     def credit_note_deleted; end
 
+    def subscription_renewal_reminder; end
+
     def transaction_created; end
 
     def transaction_updated; end
@@ -97,6 +119,12 @@ module ChargebeeRails
     def netd_payment_due_reminder; end
 
     def card_added; end
+
+    def card_updated; end
+
+    def card_expiry_reminder; end
+
+    def card_expired; end
 
     def card_deleted; end
 
