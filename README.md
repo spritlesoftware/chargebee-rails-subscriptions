@@ -1,4 +1,5 @@
 # Chargebee Rails
+### Note: This repo is no longer maintained here. Please refer to the project maintained [here](https://github.com/chargebee/chargebee-rails-subscriptions).
 This is the Rails gem for integrating with Chargebee. If you're new to Chargebee, sign up for an account [here](https://www.chargebee.com).
 
 [Introduction](#introduction)
