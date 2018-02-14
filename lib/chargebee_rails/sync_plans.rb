@@ -1,17 +1,26 @@
 module ChargebeeRails
   class SyncPlans
+    attr_accessor :messages
 
   	def self.sync
   		syncer = SyncPlans.new
-  		syncer.do_sync
+  		return syncer.do_sync
   	end
 
   	def do_sync
   		self.get_plans
   		self.sync_plans
+
+      return messages
   	end
 
   protected
+
+  def output(message)
+    puts(message)
+    self.messages ||= []
+    self.messages << message
+  end
 
   def get_plans
       loop do
@@ -28,9 +37,9 @@ module ChargebeeRails
   end
 
   def sync_plans
-    # puts "Removed #{remove_plans.count} plan(s)"
-    puts "Created #{create_new_plans.count} plan(s)"
-    puts "Updated all #{update_all_plans.count} plan(s)"
+    # output "Removed #{remove_plans.count} plan(s)"
+    output "Created #{create_new_plans.count} plan(s)"
+    output "Updated all #{update_all_plans.count} plan(s)"
   end
 
   # Retrieve the plan list from chargebee
@@ -44,14 +53,14 @@ module ChargebeeRails
   def remove_plans
     cb_plan_ids = cb_plans.flat_map(&:id)
     Plan.all.reject { |plan| cb_plan_ids.include?(plan.plan_id) }
-            .each   { |plan| puts "Deleting Plan - #{plan.plan_id}"; plan.destroy }
+            .each   { |plan| output "Deleting Plan - #{plan.plan_id}"; plan.destroy }
   end
 
   # Create new plans that are not present in app but are available in chargebee
   def create_new_plans
     plan_ids = Plan.all.map(&:plan_id)
     cb_plans.reject { |cb_plan| plan_ids.include?(cb_plan.id) }
-            .each   { |new_plan| puts "Creating Plan - #{new_plan.id}"; Plan.create(plan_params(new_plan)) }
+            .each   { |new_plan| output "Creating Plan - #{new_plan.id}"; Plan.create(plan_params(new_plan)) }
   end
 
   # Update all existing plans in the application
