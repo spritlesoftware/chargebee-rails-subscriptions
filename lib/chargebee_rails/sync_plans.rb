@@ -2,14 +2,14 @@ module ChargebeeRails
   class SyncPlans
     attr_accessor :messages
 
-  	def self.sync
+  	def self.sync(create:true, update:true, delete:false)
   		syncer = SyncPlans.new
-  		return syncer.do_sync
+  		return syncer.do_sync(create:create, update:update, delete:delete)
   	end
 
-  	def do_sync
+  	def do_sync(create:true, update:true, delete:false)
   		self.get_plans
-  		self.sync_plans
+  		self.sync_plans(create:create, update:update, delete:delete)
 
       return messages
   	end
@@ -36,10 +36,10 @@ module ChargebeeRails
     @cb_plans ||= []
   end
 
-  def sync_plans
-    # output "Removed #{remove_plans.count} plan(s)"
-    output "Created #{create_new_plans.count} plan(s)"
-    output "Updated all #{update_all_plans.count} plan(s)"
+  def sync_plans(create:true, update:true, delete:false)
+    output "Removed #{remove_plans.count} plan(s)" if (delete)
+    output "Created #{create_new_plans.count} plan(s)" if (create)
+    output "Updated all #{update_all_plans.count} plan(s)" if (update)
   end
 
   # Retrieve the plan list from chargebee
