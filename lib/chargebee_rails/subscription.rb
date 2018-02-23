@@ -52,6 +52,21 @@ module ChargebeeRails
     end
 
     #
+    # Remove scheduled changes to the subscription
+    #
+    def remove_scheduled_changes
+      begin
+      chargebee_subscription = ChargeBee::Subscription.remove_scheduled_changes(
+        chargebee_id
+      ).subscription
+      update(subscription_attrs(chargebee_subscription, self.plan))
+      rescue ChargeBee::InvalidRequestError
+        Rails.logger.warn("No changes are scheduled for this subscription")
+      end
+
+    end
+
+    #
     # Add or remove addons for the subscription
     # * *Args*    :
     #   - +addon_id+ -> the id of addon in chargebee
