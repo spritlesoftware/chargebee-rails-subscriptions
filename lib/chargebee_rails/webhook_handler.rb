@@ -6,7 +6,14 @@ module ChargebeeRails
     # corresponding event type handler for the event
     def handle(chargebee_event)
       @chargebee_event = chargebee_event
-      sync_events_list.include?(event.event_type) ? sync_events : send(event.event_type)
+      if sync_events_list.include?(event.event_type)
+        sync_events
+    elsif self.respond_to?(event.event_type)
+        send(event.event_type)
+    else
+        Rails.logger.warn("Unrecognised chargebee event type #{event.event_type}")
+    end
+
     end
 
     # Set event as ChargeBee event
