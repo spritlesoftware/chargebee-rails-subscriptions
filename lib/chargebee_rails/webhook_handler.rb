@@ -85,6 +85,10 @@ module ChargebeeRails
 
     def subscription_scheduled_cancellation_removed; end
 
+    def subscription_changes_scheduled; end
+
+    def subscription_scheduled_changes_removed; end
+
     def subscription_shipping_address_updated; end
 
     def subscription_deleted; end
