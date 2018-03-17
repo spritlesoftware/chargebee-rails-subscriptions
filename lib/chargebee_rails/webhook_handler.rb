@@ -5,15 +5,16 @@ module ChargebeeRails
     # Handle the ChargeBee event retrieved from webhook and call the
     # corresponding event type handler for the event
     def handle(chargebee_event)
-      @chargebee_event = chargebee_event
-      if sync_events_list.include?(event.event_type)
-        sync_events
-    elsif self.respond_to?(event.event_type)
-        send(event.event_type)
-    else
-        Rails.logger.warn("Unrecognised chargebee event type #{event.event_type}")
-    end
+        @chargebee_event = chargebee_event
+        if sync_events_list.include?(event.event_type)
+            sync_events
+        end
 
+        if self.respond_to?(event.event_type)
+            send(event.event_type)
+        else
+            Rails.logger.warn("Unrecognised chargebee event type #{event.event_type}")
+        end
     end
 
     # Set event as ChargeBee event
@@ -157,7 +158,7 @@ module ChargebeeRails
     private
 
     def sync_events_list
-      %w( 
+      %w(
         card_expired
         card_updated
         card_expiry_reminder
