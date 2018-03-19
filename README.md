@@ -1,5 +1,7 @@
 # Chargebee Rails
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/2f9b7a79d17605b51f5e/maintainability)](https://codeclimate.com/github/spritlesoftware/chargebee-rails-subscriptions/maintainability)
+
 This is the Rails gem for integrating with Chargebee. If you're new to Chargebee, sign up for an account [here](https://www.chargebee.com).
 
 [Introduction](#introduction)
