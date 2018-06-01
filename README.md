@@ -70,7 +70,7 @@ If the rest-client version is less than 1.8.0, update the latest version by runn
 
 # Installation
 
-##Step 1: Install the “chargebee_rails” gem to your application
+### Step 1: Install the “chargebee_rails” gem to your application
 
 Add the below line to your Gemfile:
 
@@ -90,7 +90,7 @@ And, run
 ```
 
 
-##Step 2:  Add Subscription models to your app
+### Step 2:  Add Subscription models to your app
 
 The entity that uniquely identifies a customer account within your application is referred to as a subscription owner module. For example, if you are building a CRM application, the entity that represents the customer’s account will be your subscription owner entity.
 
@@ -122,7 +122,7 @@ Now, you will have models and database tables set for subscriptions, plans, paym
 
 
 
-##Step 3: Set up Chargebee
+### Step 3: Set up Chargebee
 
 
 Configure your Chargebee site name and API key in the `config/initializers/chargebee_rails.rb` file. 
@@ -140,12 +140,12 @@ Configure your Chargebee site name and API key in the `config/initializers/charg
 ```
 
 
-##Gateway credentials
+## Gateway credentials
 
 Payment Gateway credentials have to be set up in Chargebee under *Settings> Site Settings> Gateway Settings*.
 
 
-##Webhook notifications
+## Webhook notifications
 
 You can set up basic authentication for your incoming webhook notifications in `config/initializers/chargebee_rails.rb` file. 
 
@@ -159,7 +159,7 @@ You can set up basic authentication for your incoming webhook notifications in `
 
 
 
-##Set the controller name used to handle webhooks
+## Set the controller name used to handle webhooks
 
 If you’d like to use a different controller to handle webhooks, you can extend the `ChargebeeRails::WebhookController` and add the controller name in config.webhook_handler.
 
@@ -181,7 +181,7 @@ For instance, if you have a controller *MyAppEventsController* in the `my_app_ev
 
 ```
 
-##Configure the webhook url in Chargebee
+## Configure the webhook url in Chargebee
 
 Configure the webhook url in Chargebee under *API & Webhooks> Webhook* Settings. The path can be specified as shown below:
 
@@ -196,7 +196,7 @@ Configure the webhook url in Chargebee under *API & Webhooks> Webhook* Settings.
 The webhook url for your site will be  _http(s)://&lt;your-domain&gt;.com/chargebee_rails_event_. 
 
 
-##Sync plans
+## Sync plans
 
 Currently Chargebee does not support webhook notifications for addition, update and removal of Plans. However, this gem comes with a rake task to sync plans between Chargebee and your application. Hence, each time a plan is created in Chargebee, it will automatically be synced with your application. In the future, we will have webhooks events in place to support plan related operations. Once that's done, the rake task’s code will be included as part of the event handler.
 
@@ -212,7 +212,7 @@ The plans can be synced to your application using the following command:
 **Note**: The archived plans will also be synced in this method.
 
 
-##Sync failed events
+## Sync failed events
 
 Chargebee attempts to send webhook notifications for upto 2 days. After 2 days, if the webhook event has failed due to some reason, the webhook’s status is marked as “Failed” and further attempts are stopped.  Once the error has been fixed at your end, the rake task will sync the failed events with your application. The failed events will be selectively sent to the webhook handler as well as hook methods, provided the event does not have an outdated update.
 
@@ -225,7 +225,7 @@ Chargebee attempts to send webhook notifications for upto 2 days. After 2 days, 
 
 
 
-##Sync events with your application##
+## Sync events with your application
 
 The event types listed below are synced with the application by this gem
 
@@ -259,7 +259,7 @@ The event types listed below are synced with the application by this gem
 
 
 
-##Configure your default plan Id##
+## Configure your default plan Id#
 
 When a customer signs up for a trial account, you will associate the subscription with a particular plan in Chargebee. This plan can be configured as the default plan in the gem, so that the the plan name is automatically passed during subscription creation.
 This way, when calling the [create a subscription](https://apidocs.chargebee.com/docs/api/subscriptions#create_a_subscription) API, if the plan id is not passed in the subscription method,  it will be taken from `config.default_plan_id`.
@@ -273,7 +273,7 @@ This way, when calling the [create a subscription](https://apidocs.chargebee.com
 
 
 
-##Advanced settings##
+## Advanced settings
 
 If you would like to control the subscription upgrade/downgrade behaviour, you can specify this in:
 
@@ -312,7 +312,7 @@ If you’d like to include delayed charges during [update_subscription_estimate]
 
  ```
 
-##Customer
+## Customer
 
 **Retrieve as Chargebee Customer**
 
@@ -349,7 +349,7 @@ If you’d like to include delayed charges during [update_subscription_estimate]
  ```
 
 
-##Subscription
+## Subscription
 
 **Create a Subscription**
 
