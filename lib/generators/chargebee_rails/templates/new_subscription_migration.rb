@@ -1,4 +1,10 @@
-class CreateSubscriptions < ActiveRecord::Migration
+migration_superclass = if ActiveRecord::VERSION::MAJOR >= 5
+  ActiveRecord::Migration[4.2]
+else
+  ActiveRecord::Migration
+end
+
+class CreateSubscriptions < migration_superclass
   def change
     create_table :subscriptions do |t|
       t.string :chargebee_id
