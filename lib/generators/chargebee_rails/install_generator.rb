@@ -2,6 +2,7 @@
 # https://www.github.com/sferik/rails_admin/master/lib/generators/rails_admin/install_generator.rb
 
 require 'rails/generators'
+require 'rails/generators/active_record/migration'
 
 # http://guides.rubyonrails.org/generators.html
 
@@ -9,6 +10,7 @@ module ChargebeeRails
   class InstallGenerator < Rails::Generators::Base
 
     include Rails::Generators::Migration
+    include ActiveRecord::Generators::Migration
 
     argument :subscriber_model, :type => :string, :required => true, :desc => "Owner of the subscription"
     desc "ChargebeeRails installation generator"
@@ -16,11 +18,6 @@ module ChargebeeRails
     # The path for the custom migration templates
     def self.source_paths
       [File.expand_path("../templates", __FILE__)]
-    end
-
-    # Next migration number
-    def self.next_migration_number(dirname)
-      ActiveRecord::Generators::Base.next_migration_number(dirname)
     end
 
     # Override subscriber_model to ensure it is always returned lowercase.
