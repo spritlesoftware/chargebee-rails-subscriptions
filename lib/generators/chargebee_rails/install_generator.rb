@@ -19,8 +19,8 @@ module ChargebeeRails
     end
 
     # Next migration number
-    def self.next_migration_number(dir)
-      Time.now.utc.strftime("%Y%m%d%H%M%S")
+    def self.next_migration_number(dirname)
+      ActiveRecord::Generators::Base.next_migration_number(dirname)
     end
 
     # Override subscriber_model to ensure it is always returned lowercase.
