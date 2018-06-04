@@ -70,6 +70,7 @@ namespace :chargebee_rails do
       status: plan.status,
       chargebee_data: {
         price: plan.price,
+        description: plan.description,
         period: plan.period,
         period_unit: plan.period_unit,
         trial_period: plan.trial_period,
