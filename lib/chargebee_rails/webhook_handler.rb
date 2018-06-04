@@ -5,8 +5,16 @@ module ChargebeeRails
     # Handle the ChargeBee event retrieved from webhook and call the
     # corresponding event type handler for the event
     def handle(chargebee_event)
-      @chargebee_event = chargebee_event
-      sync_events_list.include?(event.event_type) ? sync_events : send(event.event_type)
+        @chargebee_event = chargebee_event
+        if sync_events_list.include?(event.event_type)
+            sync_events
+        end
+
+        if self.respond_to?(event.event_type)
+            send(event.event_type)
+        else
+            Rails.logger.warn("Unrecognised chargebee event type #{event.event_type}")
+        end
     end
 
     # Set event as ChargeBee event
@@ -78,6 +86,10 @@ module ChargebeeRails
 
     def subscription_scheduled_cancellation_removed; end
 
+    def subscription_changes_scheduled; end
+
+    def subscription_scheduled_changes_removed; end
+
     def subscription_shipping_address_updated; end
 
     def subscription_deleted; end
@@ -146,7 +158,7 @@ module ChargebeeRails
     private
 
     def sync_events_list
-      %w( 
+      %w(
         card_expired
         card_updated
         card_expiry_reminder
