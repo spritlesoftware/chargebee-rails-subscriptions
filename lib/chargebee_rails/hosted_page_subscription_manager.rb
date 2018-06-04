@@ -22,7 +22,10 @@ module ChargebeeRails
     # from the subscription details got from chargebee's hosted page
     def update
       @subscription = @customer.subscription
-      @subscription.update(subscription_attrs)
+
+      #if we're just updating the payment method, then the subscription can be empty
+      @subscription.update(subscription_attrs) if hosted_subscription.present?
+
       manage_payment_method if hosted_payment_method.present?
       @subscription
     end
