@@ -14,13 +14,47 @@ module ChargebeeRails
       @event ||= @chargebee_event
     end
 
-    # All the event types in ChargeBee
+    # All the event types in ChargeBee as of API V2
+
+    def plan_created; end
+
+    def plan_updated; end
+
+    def plan_deleted; end
+
+    def addon_created; end
+
+    def addon_updated; end
+
+    def addon_deleted; end
+
+    def coupon_created; end
+
+    def coupon_updated; end
+
+    def coupon_deleted; end
+
+    def coupon_set_created; end
+
+    def coupon_set_updated; end
+
+    def coupon_set_deleted; end
+
+    def coupon_codes_added; end
+
+    def coupon_codes_deleted; end
+
+    def coupon_codes_updated; end
 
     def customer_created; end
 
     def customer_changed; end
 
     def customer_deleted; end
+
+    def customer_moved_out; end
+
+    def customer_moved_in; end
 
     def subscription_created; end
 
@@ -61,7 +95,7 @@ module ChargebeeRails
     def credit_note_created; end
 
     def credit_note_updated; end
-    
+
     def credit_note_deleted; end
 
     def subscription_renewal_reminder; end
@@ -79,9 +113,11 @@ module ChargebeeRails
     def payment_refunded; end
 
     def payment_initiated; end
-    
+
     def refund_initiated; end
-    
+
+    def netd_payment_due_reminder; end
+
     def card_added; end
 
     def card_updated; end
@@ -91,6 +127,21 @@ module ChargebeeRails
     def card_expired; end
 
     def card_deleted; end
+
+    def payment_source_added; end
+
+    def payment_source_updated; end
+
+    def payment_source_deleted; end
+
+    def unbilled_charges_created; end
+
+    def unbilled_charges_voided; end
+
+    def unbilled_charges_deleted; end
+
+    def unbilled_charges_invoiced; end
+
 
     private
 
@@ -141,7 +192,7 @@ module ChargebeeRails
         plan_id: ::Plan.find_by(plan_id: subscription.plan_id).id,
         plan_quantity: subscription.plan_quantity,
         status: subscription.status,
-        event_last_modified_at: event.occurred_at,
+        event_last_modified_at: Time.at(event.occurred_at),
         updated_at: Time.now,
         chargebee_data: chargebee_subscription_data(subscription)
       }
@@ -153,7 +204,8 @@ module ChargebeeRails
         next_renewal_at: subscription.current_term_end,
         cancelled_at: subscription.cancelled_at,
         is_scheduled_for_cancel: (subscription.status == 'non-renewing' ? true : false),
-        has_scheduled_changes: subscription.has_scheduled_changes
+        has_scheduled_changes: subscription.has_scheduled_changes,
+        addons: subscription.addons
       }
     end
 
@@ -166,7 +218,7 @@ module ChargebeeRails
         card_last4: card.last4,
         card_type: card.card_type,
         status: customer.payment_method.status,
-        event_last_modified_at: event.occurred_at,
+        event_last_modified_at: Time.at(event.occurred_at),
         updated_at: Time.now
       }
     end
