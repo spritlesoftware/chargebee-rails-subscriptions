@@ -215,8 +215,8 @@ module ChargebeeRails
         auto_collection: customer.auto_collection,
         payment_type: customer.payment_method.type,
         reference_id: customer.payment_method.reference_id,
-        card_last4: card&.last4,
-        card_type: card&.card_type,
+        card_last4: card && card.last4,
+        card_type: card && card.card_type,
         status: customer.payment_method.status,
         event_last_modified_at: Time.at(event.occurred_at),
         updated_at: Time.now
