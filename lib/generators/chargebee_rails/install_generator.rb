@@ -32,7 +32,7 @@ module ChargebeeRails
 
       # Generate plan.
       generate("model", "plan name:string plan_id:string status:string chargebee_data:text")
-      template "app/models/plan.rb"
+      template "app/models/plan.rb", force: true
 
       # Generate subscription.
       migration_template "new_subscription_migration.rb", "db/migrate/create_subscriptions.rb"
