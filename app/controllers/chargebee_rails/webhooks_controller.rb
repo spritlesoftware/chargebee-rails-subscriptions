@@ -1,11 +1,7 @@
 module ChargebeeRails
   class WebhooksController < ActionController::Base
     include WebhookHandler
-    if ActionPack::VERSION::MAJOR >= 5
-      before_action :authenticate, if: "ChargebeeRails.configuration.secure_webhook_api"
-    else
-      before_filter :authenticate, if: "ChargebeeRails.configuration.secure_webhook_api"
-    end
+    before_action :authenticate, if: :chargebee_configuration_webhook
 
     # Handle ChargeBee webhook events
     # From the post request received from chargebee, the event for which the
@@ -23,6 +19,10 @@ module ChargebeeRails
     end
 
     private
+
+    def chargebee_configuration_webhook
+      ChargebeeRails.configuration.secure_webhook_api
+    end
 
     def log_errors(e)
       logger.error e.message

@@ -11,13 +11,15 @@ require "chargebee_rails/subscription_builder"
 require "chargebee_rails/hosted_page_subscription_manager"
 require "chargebee_rails/customer"
 require "chargebee_rails/metered_billing"
+require "chargebee_rails/sync_plans"
+
 
 module ChargebeeRails
   # This method is used to update the chargebee customer and also reflects the
   # changes to the subscription owner in the application.
   # * *Args*    :
   #   - +customer+ -> the subscription owner
-  #   - +options+ -> the options hash allowed for customer update in chargebee 
+  #   - +options+ -> the options hash allowed for customer update in chargebee
   # For more details on the options hash, refer the input parameters for
   # https://apidocs.chargebee.com/docs/api/customers?lang=ruby#update_a_customer
   # * *Returns* :
@@ -32,11 +34,11 @@ module ChargebeeRails
   end
 
   # Update the billing information of the chargebee customer. The changes in the
-  # billing details are also reflected in the subscription owner's 
-  # +chargebee_customer_data+ 
+  # billing details are also reflected in the subscription owner's
+  # +chargebee_customer_data+
   # * *Args*    :
   #   - +customer+ -> the subscription owner
-  #   - +options+ -> the options hash allowed for updating customer billing info in chargebee 
+  #   - +options+ -> the options hash allowed for updating customer billing info in chargebee
   # For more details on the options hash, refer the input parameters for
   # https://apidocs.chargebee.com/docs/api/customers?lang=ruby#update_billing_info_for_a_customer
   # * *Returns* :
@@ -50,11 +52,11 @@ module ChargebeeRails
     customer
   end
 
-  # Add contacts to a chargebee customer, the subscription owner 
+  # Add contacts to a chargebee customer, the subscription owner
   # and the contact details hash is given as options.
   # * *Args*    :
   #   - +customer+ -> the subscription owner
-  #   - +options+ -> the options hash allowed for adding contacts to customer in chargebee 
+  #   - +options+ -> the options hash allowed for adding contacts to customer in chargebee
   # For more details on the options hash, refer the input parameters for
   # https://apidocs.chargebee.com/docs/api/customers?lang=ruby#add_contacts_to_a_customer
   # * *Returns* :
@@ -71,7 +73,7 @@ module ChargebeeRails
   # subscription owner
   # * *Args*    :
   #   - +customer+ -> the subscription owner
-  #   - +options+ -> the options hash allowed for updating customer contacts in chargebee 
+  #   - +options+ -> the options hash allowed for updating customer contacts in chargebee
   # For more details on the options hash, refer the input parameters for
   # https://apidocs.chargebee.com/docs/api/customers?lang=ruby#update_contacts_for_a_customer
   # * *Returns* :
