@@ -124,7 +124,7 @@ module ChargebeeRails
       end
       {
         cb_customer_id: hosted_customer.id,
-        auto_collection: (hosted_customer.auto_collection == 'on' ? true : false),
+        auto_collection: (hosted_customer.auto_collection == 'on'),
         payment_type: hosted_payment_method.type,
         reference_id: hosted_payment_method.reference_id,
         card_last4: card_last4,

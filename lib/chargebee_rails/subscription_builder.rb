@@ -7,7 +7,7 @@ module ChargebeeRails
     end
 
     # Create a subscription in Chargebee,
-    # update the resulting subscription details for the customer in the 
+    # update the resulting subscription details for the customer in the
     # application and finally return the subscription
     def create
       build_subscription_payload
@@ -59,7 +59,7 @@ module ChargebeeRails
 
     # Check for the default plan if one is not passed in the options payload
     # raise plan not configured error incase plan is not passed and a default
-    # plan is not set in the ChargebeeRails configuration. 
+    # plan is not set in the ChargebeeRails configuration.
     # Raise plan not found if the plan passed is not found in active record
     def build_subscription_payload
       @options[:trial_end] = 0 if @options[:skip_trial]
@@ -149,7 +149,7 @@ module ChargebeeRails
       end
       {
         cb_customer_id: chargebee_customer.id,
-        auto_collection: chargebee_customer.auto_collection,
+        auto_collection: (chargebee_customer.auto_collection == 'on'),
         payment_type: chargebee_payment_method.type,
         reference_id: chargebee_payment_method.reference_id,
         card_last4: card_last4,

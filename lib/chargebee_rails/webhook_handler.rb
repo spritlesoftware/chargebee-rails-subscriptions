@@ -224,7 +224,7 @@ module ChargebeeRails
     def payment_method_attrs customer, card
       {
         cb_customer_id: customer.id,
-        auto_collection: customer.auto_collection,
+        auto_collection: (customer.auto_collection == 'on'),
         payment_type: customer.payment_method.type,
         reference_id: customer.payment_method.reference_id,
         card_last4: card && card.last4,
