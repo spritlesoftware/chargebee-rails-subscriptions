@@ -6,7 +6,7 @@ module ChargebeeRails
       @hosted_page = hosted_page
     end
 
-    # Create a subscription for the customer in application, 
+    # Create a subscription for the customer in application,
     # from the subscription details got from chargebee's hosted page
     def create
       @customer.update(
@@ -18,7 +18,7 @@ module ChargebeeRails
       @subscription
     end
 
-    # Update the subscription for the customer in application, 
+    # Update the subscription for the customer in application,
     # from the subscription details got from chargebee's hosted page
     def update
       @subscription = @customer.subscription
@@ -124,10 +124,10 @@ module ChargebeeRails
       end
       {
         cb_customer_id: hosted_customer.id,
-        auto_collection: hosted_customer.auto_collection,
+        auto_collection: (hosted_customer.auto_collection == 'on' ? true : false),
         payment_type: hosted_payment_method.type,
         reference_id: hosted_payment_method.reference_id,
-        card_last4: card_last4, 
+        card_last4: card_last4,
         card_type: card_type,
         status: hosted_payment_method.status
       }
