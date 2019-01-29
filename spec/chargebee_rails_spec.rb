@@ -4,13 +4,21 @@ require 'sample_class'
 describe "chargebee_rails" do
   
   describe "#as_chargebee_customer" do
-    it 'should accept a subscriber and return its corresponding chagrebee customer object' do
+    let(:cb_id) { 'IG5ryicPgRSUWg1O0h' }
+
+    it 'returns its corresponding Chargebee customer object' do
+      # Test the library
       user = User.new
-      user.chargebee_id = 'IG5ryicPgRSUWg1O0h'
-      customer = ChargeBee::Customer.retrieve('IG5ryicPgRSUWg1O0h').customer
-      subscriber = user.as_chargebee_customer
-      subscriber.should be_an_instance_of ChargeBee::Customer
-      expect(subscriber.id).to eq(customer.id)
+      user.chargebee_id = cb_id
+      cb_customer = user.as_chargebee_customer
+      actual_id = cb_customer.id
+
+      # Compare to direct API result
+      customer = ChargeBee::Customer.retrieve(cb_id).customer
+      expected_id = customer.id
+
+      expect(cb_customer).to be_a(ChargeBee::Customer)
+      expect(actual_id).to eq(expected_id)
     end
   end
 
