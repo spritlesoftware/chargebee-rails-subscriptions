@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://dummy-api-key:@dummy-site.chargebee.com/api/v1/customers/IG5ryicPgRSUWg1O0h
+    uri: https://dummy-site.chargebee.com/api/v2/customers/IG5ryicPgRSUWg1O0h
     body:
       encoding: US-ASCII
       string: ''
@@ -12,7 +12,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - Chargebee-Ruby-Client v1.7.1
+      - Chargebee-Ruby-Client v2.6.2
   response:
     status:
       code: 200

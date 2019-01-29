@@ -6,14 +6,16 @@ describe "chargebee_rails" do
   describe "#as_chargebee_customer" do
     let(:cb_id) { 'IG5ryicPgRSUWg1O0h' }
 
+
     it 'returns its corresponding Chargebee customer object' do
-      # Test the library
+      # Test our library
       user = User.new
       user.chargebee_id = cb_id
+
       cb_customer = user.as_chargebee_customer
       actual_id = cb_customer.id
 
-      # Compare to direct API result
+      # Compare to direct ChargeBee API result
       customer = ChargeBee::Customer.retrieve(cb_id).customer
       expected_id = customer.id
 
